@@ -1,0 +1,17 @@
+<div class="login">
+
+  <h2 class="login-header">Log in</h2>
+
+  <form [formGroup]="formGroup" [attr.id]="formId" class="login-container" (ngSubmit)="login(formGroup)">
+    <h1>Entrada al Sistema</h1>
+    <ct-textfield [label]="'Login.username'"
+                  [placeHolder]="'Login.username'"
+                  [formControlName]="'username'"></ct-textfield>
+
+    <ct-password [label]="'Login.password'"
+                 [placeHolder]="'Login.password'"
+                 [formControlName]="'password'"></ct-password>
+
+    <button class="btn btn-lg btn-primary btn-block">Ingresar</button>
+  </form>
+</div>

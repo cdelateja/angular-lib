@@ -1,0 +1,13 @@
+<div class="modal fade show" [ngStyle]="{'display': show ? 'block' : 'none' }">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{title}}</h5>
+      </div>
+      <div class="modal-body">
+        <template #modalcontainer> </template>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade show" [ngStyle]="{'display': show ? 'block' : 'none' }"></div>

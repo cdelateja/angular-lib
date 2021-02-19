@@ -1,0 +1,368 @@
+$bodyColor: #f4f7f6;
+$white: #ffffff;
+$blue: #1e90ff;
+
+.nav-item {
+  cursor: pointer;
+}
+
+.notification-dimmer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  vertical-align: middle;
+  padding: 1em;
+  //background-color: rgba(255, 255, 255, .6);
+  z-index: 1041;
+
+  .popup-message {
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, -117%);
+    min-width: 550px;
+    transition: all .2s ease-in-out;
+    z-index: 1042;
+  }
+
+  p {
+    white-space: pre-line
+  }
+}
+
+
+.table-scroll {
+  display: block;
+  empty-cells: show;
+}
+
+.table-scroll thead {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+
+.table-scroll tbody {
+  display: block;
+  position: relative;
+  overflow-y: scroll;
+}
+
+.table-scroll tr {
+  width: 100%;
+  display: flex;
+}
+
+.table-scroll td, .table-scroll th {
+  flex-basis: 100%;
+  flex-grow: 2;
+  display: block;
+}
+
+
+.body-half-screen {
+  max-height: 250px;
+}
+
+.dialog-confirmation {
+
+  .modal-confirm h4 {
+    text-align: center;
+    font-size: 26px;
+    margin: 30px 0 -10px;
+  }
+
+  .modal-body {
+    position: relative;
+    padding: 24px;
+    text-align: center;
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+  }
+
+  .modal-footer {
+    border: none;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 13px;
+    padding: 0 74px 20px;
+
+    .btn {
+      text-decoration: none;
+      transition: all 0.4s;
+      line-height: normal;
+      min-width: 120px;
+      border: none;
+      min-height: 40px;
+      border-radius: 3px;
+      margin: 0 5px;
+      outline: none !important;
+      height: 50px;
+    }
+  }
+
+}
+
+.tooltiptext {
+  min-width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 1;
+  margin-top: 8px;
+  //bottom: -29%;
+  //left: 50%;
+  //margin-left: -60px;
+
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.3s;
+
+  &:after {
+    content: "";
+    position: absolute;
+    top: -30%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent #555 transparent;
+  }
+}
+
+/**
+ * Tooltip Styles
+ */
+/* Base styles for the element that has a tooltip */
+[data-tooltip] {
+  position: relative;
+
+  &:before,
+  &:after {
+    z-index: 1;
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+  }
+
+  &:after {
+    /* Base styles for the tooltip's content area */
+    left: 0;
+    margin-top: 5px;
+    content: attr(data-tooltip);
+    padding: 8px 0;
+    min-width: 160px;
+    background-color: #555;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1.2;
+    text-align: center;
+    border-radius: 6px;
+  }
+
+  //&:before {
+  //  content: "";
+  //  left: 50%;
+  //  margin-left: -5px;
+  //  border-width: 5px;
+  //  border-style: solid;
+  //  border-color: transparent transparent #555 transparent;
+  //}
+
+  /* Show the entire tooltip on hover and focus */
+  &:hover:after,
+  &:focus:after,
+  &:hover:before,
+  &:focus:before {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.3s;
+  }
+}
+
+.data-tooltip {
+  margin-left: 3px;
+
+  &:after {
+    bottom: -40%;
+    left: auto;
+    margin-left: 9px;
+  }
+}
+
+.btn {
+  //margin-right: 5px;
+  &:after {
+    margin-top: 38px;
+  }
+}
+
+.required-field-indicator {
+  display: inline-block;
+  line-height: inherit;
+  color: #ed473b;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .slider {
+    position: relative;
+    cursor: pointer;
+    bottom: 25px;
+    width: 60px;
+    height: 33px;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 34px;
+
+    &:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+      border-radius: 50%;
+    }
+  }
+
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+
+  input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+  }
+
+  input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+  }
+}
+
+.form-popup {
+  display: none;
+  position: absolute;
+  right: 0;
+  border: 3px solid #f1f1f1;
+  min-width: 350px;
+  background-color: white;
+  z-index: 9;
+  &.form-popup-show{
+    display: block;
+  }
+}
+
+.date-popup {
+  visibility: hidden;
+  position: absolute;
+  border: 3px solid #f1f1f1;
+  min-width: 350px;
+  background-color: white;
+  z-index: 9;
+  &.date-popup-show{
+    visibility: visible;
+  }
+
+  .day-date-other-month {
+    opacity: .5;
+  }
+
+  .cal-day-date {
+    border-radius: 2em;
+    width: 26px;
+    text-align: center;
+    cursor: pointer;
+    &.date-selected {
+      border-color: #007bff;
+      background: #007bff;
+      color: #fff;
+    }
+  }
+}
+
+/* 'Open Sans' font from Google Fonts */
+
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+.login {
+  width: 400px;
+  margin: 75px auto;
+
+  border-radius: 15px;
+}
+
+
+/* Reset top and bottom margins from certain elements */
+
+.login-header,
+.login p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.login-header {
+  background: #28d;
+  padding: 75px;
+  font-size: 1.4em;
+  font-weight: normal;
+  text-align: center;
+  text-transform: uppercase;
+  color: #fff;
+  border: 1px solid #c5c1c0;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+.login-container {
+  background: #fff;
+  padding: 12px;
+  font-weight: normal;
+  border: 1px solid #c5c1c0;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+
+/* Every row inside .login-container is defined with p tags */
+
+.login p {
+  padding: 12px;
+}
+
+.login input {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  border-width: 1px;
+  border-style: solid;
+  padding: 10px;
+  outline: 0;
+  font-size: 1.0em;
+  border-radius: 5px;
+}
+

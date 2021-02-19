@@ -1,0 +1,62 @@
+{
+  "Core": {
+    "btnAccept": "Aceptar",
+    "btnCancel": "Cancelar",
+    "btnSave": "Guardar",
+    "btnClean": "Limpiar",
+    "btnFind": "Buscar",
+    "btnEdit": "Editar",
+    "btnClose": "Cerrar",
+    "btnExit": "Salir",
+    "btnInfo": "Info",
+    "btnDelete": "Eliminar",
+    "btnReset": "Limpiar",
+    "btnLogin": "Ingresar",
+    "btnBack": "Regresar",
+    "btnPreferences": "Preferencias",
+    "find": "Buscar",
+    "show": "Ver",
+    "hide": "Ocultar",
+    "read": "Leer",
+    "detectedChanges": "Cambios realizados",
+    "detectedChangesQuestion": "¿Esta seguro que desea cancelar?"
+  },
+  "ValidatorMessages": {
+    "valid": "Campo válido",
+    "notEmpty": "Campo requerido",
+    "min": "El campo no puede tener menos de {{min}} caracteres",
+    "max": "El campo no puede tener mas de {{max}} caracteres",
+    "ranged": "El campo debe tener un mínimo de {{min}} y un máximo de {{max}} caracteres",
+    "notNull": "Debe elegir una opción",
+    "email": "Correo no válido",
+    "onlyNumbers": "El campo solo permite numeros"
+  },
+  "Months": {
+    "1": "Enero",
+    "2": "Febrero",
+    "3": "Marzo",
+    "4": "Abril",
+    "5": "Mayo",
+    "6": "Junio",
+    "7": "Julio",
+    "8": "Agosto",
+    "9": "Septiembre",
+    "10": "Octubre",
+    "11": "Noviembre",
+    "12": "Diciembre"
+  },
+  "Warnings": {
+    "title": "Advertencia",
+    "deleteQuestion": "¿Desea eleminiar el elemento?",
+    "notificationTitle": "Notificacion"
+  },
+  "Login": {
+    "username": "Nombre de Usuario",
+    "password": "Contraseña",
+    "errorSesionMultiple": "Ya se encuentra una sesión abierta en otro equipo o navegador"
+  },
+  "Preferences": {
+    "title": "Preferencia a guardar",
+    "prefName": "Nombre"
+  }
+}

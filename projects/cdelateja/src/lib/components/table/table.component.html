@@ -1,0 +1,25 @@
+<div class="table-responsive">
+  <table class="table" [ngClass]="{'table-scroll': isScroll, 'table-hover': isSelectMultiple !== null}">
+    <thead>
+    <tr>
+      <th *ngFor="let header of headers" (click)="sort(header)">
+        {{(propertyPrefix !== undefined ? propertyPrefix + '.' + header : header) | translate}}
+      </th>
+<!--      <th *ngFor="let header of extraHeaders">-->
+<!--        {{(propertyPrefix !== undefined ? propertyPrefix + '.' + header : header) | translate}}-->
+<!--      </th>-->
+    </tr>
+    </thead>
+    <tbody class="" [ngClass]="isScroll ? 'body-half-screen' : ''" (scroll)="onScroll($event)">
+    <tr *ngFor="let item of data" (click)="selectRow($event, item)"
+        [ngClass]="this.ifSelected(item) ? 'table-primary' : ''">
+      <td *ngFor="let header of headers">
+        {{item[header]}}
+      </td>
+<!--      <td *ngFor="let column of extraColumns">-->
+<!--        <ct-table-column [component]="column.component"></ct-table-column>-->
+<!--      </td>-->
+    </tr>
+    </tbody>
+  </table>
+</div>

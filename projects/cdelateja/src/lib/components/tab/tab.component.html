@@ -1,0 +1,13 @@
+<nav class="nav nav-pills nav-justified">
+  <a *ngFor="let item of components" class="nav-item nav-link"
+     [ngClass]="{'active show': item.title === tabSelected}"
+     data-toggle="tab" data-target="#{{item.title}}"
+     (click)="onTabSelected(item.title)">
+    {{item.title}}
+  </a>
+</nav>
+<div class="tab-content form-group">
+  <div *ngFor="let item of components" class="tab-pane fade" [ngClass]="{'active show': item.title === tabSelected}">
+    <ct-body-tab [component]="item.component"></ct-body-tab>
+  </div>
+</div>

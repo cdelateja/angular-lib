@@ -1,0 +1,17 @@
+<div class="form-group filter-dropdown">
+  <input type="text" class="form-control" [attr.name]="formControlName"
+         [(ngModel)]="value"
+         [attr.disabled]="disabled ? '' : null"
+         placeholder="{{placeHolder | translate}}"
+         (keyup)="onTypingWord(value)"
+         (focus)="show()">
+  <div class="items" [ngClass]="{'hide': hide}">
+    <div class='item'
+         [ngClass]="{'active': selectedItem === item}"
+         *ngFor="let item of foundedItems"
+         (click)="onSelected(item)">
+      {{itemCaption !== undefined ? item[itemCaption] : item}}
+    </div>
+  </div>
+
+</div>

@@ -1,0 +1,66 @@
+<div class="form-group">
+  <input type="text" class="form-control"
+         [attr.name]="formControlName"
+         [ngClass]="{'is-invalid': status === 'invalid', 'is-valid': status === 'valid' }"
+         (focus)="togglePopUp()"
+         [attr.disabled]="disabled ? '' : null"
+         [(ngModel)]="value" placeholder="{{placeHolder | translate}}">
+  <div class="message-error invalid-feedback" *ngFor="let error of errorsKeys">
+    {{controlErrors[error].message | translate : controlErrors[error]}}
+  </div>
+  <div class="valid-feedback" *ngIf="status === 'valid'">
+    {{validMessage | translate}}
+  </div>
+
+  <div class="card align-middle date-popup" #popup>
+    <div class="card-header">
+      <div class="float-left">
+        <button type="button" (click)="togglePopUp()" class="btn btn-outline-danger">Cancelar</button>
+      </div>
+      <div class="float-right">
+        <button type="button" (click)="accept()" class="btn btn-outline-primary">Aceptar</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="btn-group">
+            <button type="button" class="btn btn-secondary" (click)="backMonth()">{{"<"}}</button>
+            <button type="button" class="btn btn-secondary"
+                    disabled>{{'Months.' + firstDate.getMonth() | translate}}</button>
+            <button type="button" class="btn btn-secondary" (click)="nextMonth()">{{">"}}</button>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="btn-group float-right">
+            <button type="button" class="btn btn-secondary" (click)="backYear()">{{"<"}}</button>
+            <button type="button" class="btn btn-secondary" disabled>{{firstDate.getFullYear()}}</button>
+            <button type="button" class="btn btn-secondary" (click)="nextYear()">{{">"}}</button>
+          </div>
+        </div>
+      </div>
+      <table class="table">
+        <thead>
+        <tr>
+          <th scope="col">Lu</th>
+          <th scope="col">Ma</th>
+          <th scope="col">Mi</th>
+          <th scope="col">Ju</th>
+          <th scope="col">Vi</th>
+          <th scope="col">Sá</th>
+          <th scope="col">Do</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let week of weeks">
+          <td *ngFor="let day of week" (click)="selectDate($event, day)">
+            <div class="cal-day-date"
+                 [ngClass]="{'day-date-other-month': day.otherMonth, 'date-selected': isSelected(day)}">{{day.day}}</div>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

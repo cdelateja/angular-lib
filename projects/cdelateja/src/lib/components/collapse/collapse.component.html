@@ -1,0 +1,21 @@
+<div class="accordion">
+  <div class="card" *ngFor="let item of components">
+    <div class="card-header">
+      <h5>
+        <button class="btn btn-link" type="button" (click)="toggle(item)">
+          {{item.title}}
+        </button>
+      </h5>
+    </div>
+
+    <div class="collapse" [ngClass]="{'show': item.show}">
+      <div class="card-body">
+        <ng-container *ngIf="item.component !== null">
+          <ct-body-collapse [component]="item.component"></ct-body-collapse>
+        </ng-container>
+        {{item.text}}
+      </div>
+    </div>
+  </div>
+
+</div>

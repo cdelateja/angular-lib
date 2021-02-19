@@ -1,0 +1,56 @@
+<div class="form-group">
+  <div class="form-row">
+
+    <div class="col-md col-sm-12 parent">
+      <select class="form-control first-twin"
+              multiple
+              #leftSelect
+              [ngClass]="{'is-invalid': status === 'invalid', 'is-valid': status === 'valid' }"
+              [attr.disabled]="disabled ? '' : null">
+        <option *ngFor="let item of localValues"
+                (dblclick)="selectElement(item)">
+          {{itemCaption !== undefined ? item[itemCaption] : item}}
+        </option>
+      </select>
+    </div>
+
+    <div class="col-md-1 col-sm-12">
+      <button type="button" class="btn btn-secondary btn-sm btn-block" (click)="toRight()"
+              style="position: relative; top: 29%;">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </button>
+      <button type="button" class="btn btn-secondary btn-sm btn-block" (click)="toLeft()"
+              style="position: relative; top: 29%;">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </button>
+    </div>
+
+    <div class="col-md col-sm-12">
+      <label>{{rightLabel | translate}}</label>
+      <select class="form-control"
+              multiple
+              #rightSelect
+              [ngClass]="{'is-invalid': status === 'invalid', 'is-valid': status === 'valid' }"
+              [attr.name]="formControlName"
+              [attr.disabled]="disabled ? '' : null"
+              [(ngModel)]="value">
+        <option *ngFor="let item of selValues"
+                [ngValue]=item
+                (dblclick)="removeElement(item)">
+          {{itemCaption !== undefined ? item[itemCaption] : item}}
+        </option>
+      </select>
+    </div>
+
+  </div>
+  <div class="form-control" hidden
+       [ngClass]="{'is-invalid': status === 'invalid', 'is-valid': status === 'valid' }"></div>
+  <div class="message-error invalid-feedback" *ngFor="let error of errorsKeys">
+    {{controlErrors[error].message | translate : controlErrors[error]}}
+  </div>
+  <div class="valid-feedback" *ngIf="status === 'valid'">
+    {{validMessage | translate}}
+  </div>
+</div>

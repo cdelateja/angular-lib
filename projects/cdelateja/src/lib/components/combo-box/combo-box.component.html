@@ -1,0 +1,18 @@
+<div class="form-group">
+  <select class="form-control"
+          [attr.name]="formControlName"
+          [ngClass]="{'is-invalid': status === 'invalid', 'is-valid': status === 'valid' }"
+          [(ngModel)]="value"
+          [attr.disabled]="disabled ? '' : null">
+    <option [ngValue]="null">{{placeHolder | translate}}</option>
+    <option *ngFor="let item of values" [ngValue]=item>
+      {{itemCaption !== undefined ? item[itemCaption] : item}}
+    </option>
+  </select>
+  <div class="message-error invalid-feedback" *ngFor="let error of errorsKeys">
+    {{controlErrors[error].message | translate : controlErrors[error]}}
+  </div>
+  <div class="valid-feedback" *ngIf="status === 'valid'">
+    {{validMessage | translate}}
+  </div>
+</div>

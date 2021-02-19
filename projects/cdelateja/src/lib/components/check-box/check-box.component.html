@@ -1,0 +1,17 @@
+<div class="form-group">
+  <div class="form-check form-check-inline">
+    <input class="form-check-input" type="checkbox"
+           [attr.name]="formControlName"
+           [attr.disabled]="disabled ? '' : null"
+           [(ngModel)]="value">
+  </div>
+  <div class="form-control" hidden
+       [ngClass]="{'is-invalid': status === 'invalid', 'is-valid': status === 'valid' }"></div>
+  <div class="message-error invalid-feedback" *ngFor="let error of errorsKeys">
+    {{controlErrors[error].message | translate : controlErrors[error]}}
+  </div>
+  <div class="valid-feedback" *ngIf="status === 'valid'">
+    {{validMessage | translate}}
+  </div>
+  <div> <!-- Div used for tooltip--> </div>
+</div>

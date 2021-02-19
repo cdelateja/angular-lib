@@ -1,0 +1,17 @@
+<div class="btn-toolbar justify-content-end">
+  <div class="btn-group">
+    <button type="button" class="btn btn-secondary" (click)="back()" [attr.disabled]="position > 0 ? null : ''">
+      <span aria-hidden="true">&laquo;</span>
+      <span class="sr-only">Previous</span>
+    </button>
+    <button *ngFor="let item of numberButtons" type="button" class="btn btn-secondary"
+            [attr.disabled]="item.enable ? null : ''"
+            (click)="viewDataPosition(item.number)">
+      {{item.number}}
+    </button>
+    <button type="button" class="btn btn-secondary" (click)="next()" [attr.disabled]="enabledNextButton ? null : ''">
+      <span aria-hidden="true">&raquo;</span>
+      <span class="sr-only">Next</span>
+    </button>
+  </div>
+</div>
