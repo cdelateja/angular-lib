@@ -1,0 +1,12 @@
+{
+  "Menu": {
+    "home": "Inicio",
+    "form": "Formulario",
+    "challenge": "Challenge"
+  },
+  "Challenge": {
+    "title": "Paginas de destino",
+    "name": "Nombre de la pagina",
+    "templateId": "Tipo de pagina"
+  }
+}

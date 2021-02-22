@@ -1,1 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+  background-image: linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%);
+  position: relative;
+}
+
+.container-fluid {
+
+  &.main {
+    padding-left: 36px;
+    padding-right: 36px;
+  }
+}

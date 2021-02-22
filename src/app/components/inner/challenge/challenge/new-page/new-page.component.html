@@ -1,0 +1,29 @@
+<div class="modal fade" [attr.id]="'newPageModal'">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="card">
+        <div class="card-body">
+
+          <form [formGroup]="formGroup" [attr.id]="formId" class="k-form">
+            <div class="row">
+              <div class="col-md-12 col-sm-12">
+                <ct-textfield [label]="'Challenge.name'" [formControlName]="'name'">
+                </ct-textfield>
+              </div>
+              <div class="col-md-12 col-sm-12">
+                <ct-combo-box [label]="'Challenge.templateId'"
+                              [placeHolder]="'Seleccione un pais'"
+                              [formControlName]="'templateId'"></ct-combo-box>
+              </div>
+            </div>
+
+            <button type="button" class="btn btn-primary" (click)="guardar()">
+              Guardar
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<div class="container-fluid main">
+  <div class="row form-group">
+
+    <div class="col-md-12">
+      <h5>{{'Challenge.title' | translate}}</h5>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-md-12">
+      <div class="row">
+        <div class="col-12">
+          <div class="card form-group">
+            <div class="card-body">
+
+              <button type="button" class="btn btn-primary float-right" (click)="add()">
+                Agregar
+              </button>
+
+              <table class="table table-striped">
+                <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">First</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let page of pages.data; let i = index">
+                  <td scope="row">
+                    {{i}}
+                  </td>
+                  <td>
+                    {{page.attributes.title}}
+                  </td>
+                </tr>
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+<app-new-page></app-new-page>
+
