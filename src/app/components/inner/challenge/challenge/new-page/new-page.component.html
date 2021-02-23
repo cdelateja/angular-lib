@@ -12,12 +12,15 @@
               </div>
               <div class="col-md-12 col-sm-12">
                 <ct-combo-box [label]="'Challenge.templateId'"
-                              [placeHolder]="'Seleccione un pais'"
-                              [formControlName]="'templateId'"></ct-combo-box>
+                              [placeHolder]="'Seleccione una opcion'"
+                              [formControlName]="'templateId'"
+                              [values]="templates"
+                              [eqVal]="'pageId'"
+                              [itemCaption]="'name'"></ct-combo-box>
               </div>
             </div>
 
-            <button type="button" class="btn btn-primary" (click)="guardar()">
+            <button type="button" class="btn btn-primary" (click)="save()">
               Guardar
             </button>
           </form>

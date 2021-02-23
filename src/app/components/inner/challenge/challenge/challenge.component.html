@@ -22,16 +22,22 @@
                 <thead>
                 <tr>
                   <th scope="col">#</th>
-                  <th scope="col">First</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col"></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr *ngFor="let page of pages.data; let i = index">
-                  <td scope="row">
+                  <td>
                     {{i}}
                   </td>
                   <td>
                     {{page.attributes.title}}
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-link" (click)="show(page.id)">
+                      Ver
+                    </button>
                   </td>
                 </tr>
                 </tbody>
@@ -47,4 +53,5 @@
   </div>
 </div>
 <app-new-page></app-new-page>
+<app-show-page></app-show-page>
 

@@ -11,32 +11,6 @@ export class BasicForm {
   public myOther: any = null;
 }
 
-export class Group {
-  public name: string = '';
-  public description: string = '';
-  public status: string = '';
-  public group: string = '';
-  public master: string = '';
-  public funds: string = '';
-  public accounts: Account[] = [];
-}
-
-export class Balance {
-  public today: number;
-  public balance: number;
-}
-
-export class Movement {
-  public balance: number;
-  public operation: string;
-  public date: Date = new Date();
-}
-
-export class Login {
-  public userName = '';
-  public password = '';
-}
-
 export class PageForm {
   public name = '';
   public templateId: any = null;
@@ -44,7 +18,7 @@ export class PageForm {
 
 export class PageResponse {
   public name = '';
-  public templateId: any = null;
+  public templateId: Template = null;
 }
 
 export class PagesResponse {
@@ -71,4 +45,24 @@ export class PageRequest {
       templateId: 0
     }
   }
+}
+
+export class Template {
+  name: String = '';
+  pageId = 0;
+}
+
+export class TemplatesResponse {
+  data: DataTemplate[] = [];
+}
+
+export class DataTemplate {
+  public type = '';
+  public id = '';
+  public attributes: AttributeTemplate = null;
+}
+
+export class AttributeTemplate {
+  public pageId = 0;
+  public name = '';
 }

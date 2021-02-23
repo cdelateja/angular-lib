@@ -17,9 +17,15 @@ export class ChallengeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.searchPages();
+    this.observablesService.obsRefresh().subscribe(e => {
+      this.searchPages();
+    });
+  }
 
-    this.challengeService.getPages().subscribe(result =>{
-      if(ClientService.validateData(result)){
+  searchPages() {
+    this.challengeService.getPages().subscribe(result => {
+      if (ClientService.validateData(result)) {
         this.pages = result.result;
       }
     });
@@ -27,5 +33,9 @@ export class ChallengeComponent implements OnInit {
 
   add() {
     this.observablesService.openModalNewPage(null);
+  }
+
+  show(id: any) {
+    this.observablesService.openModalViewPage(id);
   }
 }

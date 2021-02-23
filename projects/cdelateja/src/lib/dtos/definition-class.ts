@@ -118,15 +118,6 @@ export class FiltroRequest {
 export class IdRequest {
   public id: number;
 }
-
-export class NotificationMessage {
-  public id: number;
-  public message: string;
-  public viewed: boolean;
-  public userId: number;
-  public auditId: number;
-}
-
 export class MultipleSessionError implements Error {
   message: string;
   name: string;

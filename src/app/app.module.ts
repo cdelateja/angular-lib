@@ -16,6 +16,7 @@ import { FooterComponent } from './components/structure/footer/footer.component'
 import { MenuComponent } from './components/structure/menu/menu.component';
 import { ChallengeComponent } from './components/inner/challenge/challenge/challenge.component';
 import { NewPageComponent } from './components/inner/challenge/challenge/new-page/new-page.component';
+import { ShowPageComponent } from './components/inner/challenge/challenge/show-page/show-page.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { NewPageComponent } from './components/inner/challenge/challenge/new-pag
     FooterComponent,
     MenuComponent,
     ChallengeComponent,
-    NewPageComponent
+    NewPageComponent,
+    ShowPageComponent
   ],
   imports: [
     BrowserModule,
