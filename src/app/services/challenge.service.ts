@@ -27,8 +27,11 @@ export class ChallengeService {
   }
 
   public savePage(pageRequest: PageRequest): Observable<any> {
-    return this.clientService.post(`${this.URL}` + this.configService.get('ctServers.savePages'),
+    return this.clientService.post(`${this.URL}` + this.configService.get('ctServers.savePage'),
       pageRequest);
   }
 
+  public deletePage(id: number): Observable<any> {
+    return this.clientService.delete(`${this.URL}` + `${this.configService.get('ctServers.getPage')}${id}`);
+  }
 }

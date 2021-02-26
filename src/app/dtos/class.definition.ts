@@ -35,6 +35,7 @@ export class AttributePage {
   public title = '';
   public url = '';
   public pageType = '';
+  public deleted: boolean = false;
 }
 
 export class PageRequest {

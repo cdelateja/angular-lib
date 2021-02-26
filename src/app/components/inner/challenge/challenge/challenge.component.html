@@ -35,8 +35,15 @@
                     {{page.attributes.title}}
                   </td>
                   <td>
-                    <button type="button" class="btn btn-link" (click)="show(page.id)">
+                    <button type="button" class="btn btn-link"
+                            [disabled]="page.attributes.deleted"
+                            (click)="show(page.id)">
                       Ver
+                    </button>
+                    <button type="button" class="btn btn-link text-danger"
+                            [disabled]="page.attributes.deleted"
+                            (click)="delete(page.id)">
+                      Borrar
                     </button>
                   </td>
                 </tr>
