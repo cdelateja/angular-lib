@@ -31,12 +31,12 @@ export class LoginService {
   }
 
   @Action(LoginAction)
-  loginAction({getState, patchState}) {
+  public loginAction({getState, patchState}): void {
     this.login();
   }
 
   @Action(LogoutAction)
-  logoutAction({getState, patchState}) {
+  public logoutAction({getState, patchState}): void {
     this.logout();
   }
 
@@ -44,9 +44,9 @@ export class LoginService {
    * This function is for having the same app in two different tabs and in one make the login or logout action so it propagates the action
    * Also it is for auto login other applications after the first app log in
    */
-  initListeners() {
+  public initListeners(): void {
     this.storageEvent = fromEvent(window, 'storage');
-    this.storageEvent.pipe(delay(500)).subscribe(data => {
+    this.storageEvent.pipe(delay(500)).subscribe((data) => {
       console.log('initListeners');
       const action = localStorage.getItem('ACTION_NAME');
       if (this.statusApp === 'NOT_LOGGED') {
@@ -62,29 +62,29 @@ export class LoginService {
     });
   }
 
-  public setProperties(appName: string, password: string, pathHome: string) {
+  public setProperties(appName: string, password: string, pathHome: string): void {
     localStorage.setItem('PATH_HOME', pathHome);
     this.oauthService.setProperties(appName, password);
     this.iamUrl = this.configService.get('lsServers.zuul.iamserverrepo');
   }
 
-  public validateSso() {
+  public validateSso(): void {
     console.log('Antes del serivico de ssCheckCookie');
-    this.oauthService.ssoCheckCookie().then(result => {
+    this.oauthService.ssoCheckCookie().then((result) => {
       if (result && result !== '') {
         this.loginWithSsoCookie(result);
       }
     });
   }
 
-  public loginWithSsoCookie(cookie: string) {
+  public loginWithSsoCookie(cookie: string): void {
     const userPassword: string[] = cookie.split(':');
     const loginRequest = new LoginRequest();
     loginRequest.username = userPassword[0];
     loginRequest.password = userPassword[1];
     loginRequest.autoLogin = true;
     console.log('Entrando al login', loginRequest);
-    this.validateLoginWithCookie(loginRequest).then(r => {
+    this.validateLoginWithCookie(loginRequest).then((r) => {
       if (r) {
         console.log(r);
         this.login();
@@ -105,12 +105,12 @@ export class LoginService {
             this.rolesList = this.oauthService.getUser().authorities;
             this.login();
           }
-        }).catch(error => {
+        }).catch((error) => {
           throw error;
         });
       if (this.getIsAuthenticated()) {
         await this.oauthService.withToken().get(`${this.iamUrl}/usuario/admin/by/nombre?nombre=${params.username}`)
-          .toPromise().then(result => {
+          .toPromise().then((result) => {
             localStorage.setItem('userIAM', JSON.stringify(result));
           });
       }
@@ -129,12 +129,12 @@ export class LoginService {
         if (authenticated) {
           this.rolesList = this.oauthService.getUser().authorities;
         }
-      }).catch(error => {
+      }).catch((error) => {
         throw error;
       });
     if (this.getIsAuthenticated()) {
       await this.oauthService.withToken().get(`${this.iamUrl}/usuario/admin/by/nombre?nombre=${params.username}`)
-        .toPromise().then(result => {
+        .toPromise().then((result) => {
           localStorage.setItem('userIAM', JSON.stringify(result));
         });
     }
@@ -157,7 +157,7 @@ export class LoginService {
     return this.oauthService.getToken();
   }
 
-  public login() {
+  public login(): void {
     this.statusApp = 'LOGGED';
     localStorage.setItem('APP_STATUS', 'LOGGED');
     localStorage.setItem('ACTION_NAME', STATUS.login);
@@ -168,8 +168,8 @@ export class LoginService {
     }
   }
 
-  public logout() {
-    this.oauthService.logout().then(r => {
+  public logout(): void {
+    this.oauthService.logout().then((r) => {
       if (r) {
         localStorage.setItem('ACTION_NAME', STATUS.logout);
         localStorage.removeItem('APP_STATUS');

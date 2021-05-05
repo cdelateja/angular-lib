@@ -44,24 +44,22 @@ export class AbstractValidator implements OnInit, AfterViewInit {
 
   /**
    *
-   * @param translate
    */
   constructor(protected translate: TranslateService) {
     this.initFormBinder();
   }
 
-
-  ngOnInit() {
+  public ngOnInit(): void {
   }
 
-  ngAfterViewInit() {
+  public ngAfterViewInit(): void {
     this.init();
   }
 
   /**
    * Inicialize object this has to be call on ngOnInit() function
    */
-  protected init() {
+  protected init(): void {
     this.fieldComponentsAsMap();
     this.validateChanges();
     this.formContainer = document.getElementById(this.formId);
@@ -71,7 +69,7 @@ export class AbstractValidator implements OnInit, AfterViewInit {
   /**
    *
    */
-  protected initFormBinder() {
+  protected initFormBinder(): void {
     if (this.formBinder !== undefined) {
       if (this.formBinder.formId === '') {
         this.formId = this.getUuId();
@@ -84,7 +82,7 @@ export class AbstractValidator implements OnInit, AfterViewInit {
    *
    * @param fieldsConfig
    */
-  protected initDynamicFormBinder(fieldsConfig: FieldConfig[]) {
+  protected initDynamicFormBinder(fieldsConfig: FieldConfig[]): void {
     this.formId = this.getUuId();
     createDynamicFormValidator(fieldsConfig, this);
   }
@@ -92,14 +90,14 @@ export class AbstractValidator implements OnInit, AfterViewInit {
   /**
    * triggers the observable event to display errors on components
    */
-  public setMessageErrors(errors: Error[]) {
+  public setMessageErrors(errors: Error[]): void {
     this.errorsObserver.next(errors);
   }
 
   /**
    * Clean error messages then it shows errors. Returns formValid Boolean
    */
-  public validateForm(): Boolean {
+  public validateForm(): boolean {
     this.fieldsMap.forEach((abstractField: AbstractComponent, key: string) => {
       const abstractControl = this.formGroup.controls[key];
       this.validateField(abstractControl, abstractField);
@@ -110,7 +108,7 @@ export class AbstractValidator implements OnInit, AfterViewInit {
   /**
    * Function for remove all error messages
    */
-  public cleanMessages() {
+  public cleanMessages(): void {
     this.fieldsMap.forEach((value: AbstractComponent, key: string) => {
       value.cleanMessages();
     });
@@ -128,7 +126,7 @@ export class AbstractValidator implements OnInit, AfterViewInit {
    * @param control
    * @param abstractField
    */
-  public validateField(control: AbstractControl, abstractField: AbstractComponent) {
+  public validateField(control: AbstractControl, abstractField: AbstractComponent): void {
     const controlErrors: ValidationErrors = control.errors;
     if (controlErrors !== null) {
       abstractField.setMessagesErrors(controlErrors, this.multipleErrorsMessages);
@@ -161,21 +159,21 @@ export class AbstractValidator implements OnInit, AfterViewInit {
     }
   }
 
-  public enabledField(field: string) {
+  public enabledField(field: string): void {
     const control: AbstractControl = this.getControl(field);
     if (control) {
       control.enable();
     }
   }
 
-  private getControl(field: string) {
+  private getControl(field: string): AbstractControl {
     return this.formGroup.controls[field];
   }
 
   /**
    * Creates an observable for every field
    */
-  private validateChanges() {
+  private validateChanges(): void {
     this.fieldsMap.forEach((abstractField: AbstractComponent, key: string) => {
       const abstractControl = this.formGroup.controls[key];
       abstractControl.valueChanges.subscribe(() => {
@@ -188,8 +186,8 @@ export class AbstractValidator implements OnInit, AfterViewInit {
   /**
    *
    */
-  protected fieldComponentsAsMap() {
-    this.fieldsComponents.forEach(f => {
+  protected fieldComponentsAsMap(): void {
+    this.fieldsComponents.forEach((f) => {
       if (f.formControlName && !this.fieldsMap.has(f.formControlName)) {
         this.fieldsMap.set(f.formControlName, f);
       }
@@ -199,9 +197,9 @@ export class AbstractValidator implements OnInit, AfterViewInit {
   /**
    * Generate an observable for errors
    */
-  private subscribeErrors() {
+  private subscribeErrors(): void {
     this.errorsObserver.asObservable().subscribe((errors: Error[]) => {
-      errors.forEach(e => {
+      errors.forEach((e) => {
         const control = this.formGroup.controls[e.field];
         const abstractField = this.fieldsMap.get(e.field);
         control.setErrors(e.error);

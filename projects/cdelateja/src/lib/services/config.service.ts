@@ -23,17 +23,17 @@ export class ConfigService {
     }
   }
 
-  public get(key: string) {
+  public get(key: string): any {
     return JSON.parse(localStorage.getItem(this.propsName))[key];
   }
 
   private getConfigFile(): Promise<any> {
     return this.http.get('assets/config/config.json')
-      .pipe(map(data => {
+      .pipe(map((data: any) => {
         return data;
       }))
       .toPromise()
-      .then(res => {
+      .then((res) => {
         return res;
       })
       .catch((err) => {
@@ -44,11 +44,11 @@ export class ConfigService {
 
   private async getConfigProperty(name: string, profile: string): Promise<any> {
     return this.http.get(this.configFile.url + `${name}/${profile}`).pipe(
-      map(data => {
+      map((data) => {
         return data;
       }))
       .toPromise()
-      .then(res => {
+      .then((res) => {
         return res;
       })
       .catch((err) => {
@@ -76,6 +76,6 @@ export class ConfigService {
   }
 }
 
-export function loadConfig(config: ConfigService) {
+export function loadConfig(config: ConfigService): any {
   return () => config.load();
 }

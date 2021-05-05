@@ -20,7 +20,7 @@ export class ClientService {
   constructor(private http: HttpClient) {
   }
 
-  static validateData(response: Response): boolean {
+  public static validateData(response: Response): boolean {
     const status: number = response.responseStatus;
     const system = status / 1000;
     const error = status % 1000;
@@ -36,40 +36,40 @@ export class ClientService {
    * M&eacute;todo que asigna un httpOptions
    * @param httpOptions
    */
-  setHttOptions(httpOptions: any) {
+  public setHttOptions(httpOptions: any): void {
     this.httpOptions = httpOptions;
   }
 
-  getHttOptions(): any {
+  public getHttOptions(): any {
     return this.httpOptions;
   }
 
-  post(url: string, jsonBody: any, options?: ClientOptions): Observable<any> {
+  public post(url: string, jsonBody: any, options?: ClientOptions): Observable<any> {
     return this.processPetition('post', url, jsonBody, options);
   }
 
-  put(url: string, jsonBody: any, options?: ClientOptions): Observable<any> {
+  public put(url: string, jsonBody: any, options?: ClientOptions): Observable<any> {
     return this.processPetition('put', url, jsonBody, options);
   }
 
-  get(url: string, options?: ClientOptions): Observable<any> {
+  public get(url: string, options?: ClientOptions): Observable<any> {
     return this.processPetition('get', url, null, options);
   }
 
-  delete(url: string, options?: ClientOptions): Observable<any> {
+  public delete(url: string, options?: ClientOptions): Observable<any> {
     return this.processPetition('delete', url, null, options);
   }
 
-  postStream(url: string, jsonBody: any): Observable<any> {
+  public postStream(url: string, jsonBody: any): Observable<any> {
     this.httpOptions['responseType'] = 'blob';
     return this.http.post(url, JSON.stringify(jsonBody), this.httpOptions).pipe(
       catchError((error: HttpErrorResponse) => {
         return this.validateErrorHttp(error);
       }),
-      retryWhen(errors => {
+      retryWhen((errors) => {
         return this.retry(errors);
       }),
-      map(data => {
+      map((data) => {
         return data;
       }));
   }
@@ -114,9 +114,9 @@ export class ClientService {
       return this.getPetition(type, url, options, body);
     } else {
       const clientOptions: ClientOptions = {
+        bufferSize: 0,
         delay: 2000,
-        take: 10,
-        bufferSize: 0
+        take: 10
       };
       return this.getPetition(type, url, clientOptions, body);
     }
@@ -129,13 +129,13 @@ export class ClientService {
           catchError((error: HttpErrorResponse) => {
             return this.validateErrorHttp(error);
           }),
-          retryWhen(errors => {
+          retryWhen((errors) => {
             return this.retry(errors, options.delay, options.take);
           }),
-          tap(result => {
+          tap((result) => {
             return result;
           }),
-          map(data => {
+          map((data) => {
             return data;
           }),
           shareReplay({bufferSize: options.bufferSize, refCount: true}));
@@ -145,10 +145,10 @@ export class ClientService {
           catchError((error: HttpErrorResponse) => {
             return this.validateErrorHttp(error);
           }),
-          retryWhen(errors => {
+          retryWhen((errors) => {
             return this.retry(errors, options.delay, options.take);
           }),
-          map(data => {
+          map((data) => {
             return data;
           }),
           shareReplay({bufferSize: options.bufferSize, refCount: true}));
@@ -158,10 +158,10 @@ export class ClientService {
           catchError((error: HttpErrorResponse) => {
             return this.validateErrorHttp(error);
           }),
-          retryWhen(errors => {
+          retryWhen((errors) => {
             return this.retry(errors, options.delay, options.take);
           }),
-          map(data => {
+          map((data) => {
             return data;
           }),
           shareReplay({bufferSize: options.bufferSize, refCount: true}));
@@ -171,10 +171,10 @@ export class ClientService {
           catchError((error: HttpErrorResponse) => {
             return this.validateErrorHttp(error);
           }),
-          retryWhen(errors => {
+          retryWhen((errors) => {
             return this.retry(errors, options.delay, options.take);
           }),
-          map(data => {
+          map((data) => {
             return data;
           }),
           shareReplay({bufferSize: options.bufferSize, refCount: true}));
@@ -186,13 +186,13 @@ export class ClientService {
     if (error.status === this.NO_CONNECTION) {
       return throwError(new Response(error.status, error.message));
     } else {
-      return new Observable(observer => {
+      return new Observable((observer) => {
         observer.next(new Response(error.status, error.message));
       });
     }
   }
 
-  private retry(errors: any, timesDelay?: number, timesTake?: number) {
+  private retry(errors: any, timesDelay?: number, timesTake?: number): Observable<any> {
     const tTake = timesTake ? timesTake : 10;
     return errors.pipe(
       delay(timesDelay ? timesDelay : 2000),
@@ -204,11 +204,10 @@ export class ClientService {
           console.log('Limited reached');
           return throwError(new Response(500, 'Unable to connect to server'));
         }
-        return new Observable(observer => {
+        return new Observable((observer) => {
           observer.next(error);
         });
       }),
     );
   }
 }
-

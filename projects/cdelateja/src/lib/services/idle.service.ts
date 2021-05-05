@@ -1,14 +1,14 @@
-import { Observable, Subscription, Subject, merge, fromEvent, interval } from 'rxjs';
-import { NgZone, Injectable } from '@angular/core';
-import { take, switchMap, tap, skipWhile } from 'rxjs/operators';
+import {Observable, Subscription, Subject, merge, fromEvent, interval} from 'rxjs';
+import {NgZone, Injectable} from '@angular/core';
+import {take, switchMap, tap, skipWhile} from 'rxjs/operators';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class IdleService {
 
-    //events
-    public inactivityEvents: Array<any>[] = [[document, 'click'],
+  // events
+  public inactivityEvents: Array<any>[] = [[document, 'click'],
     [document, 'wheel'],
     [document, 'scroll'],
     [document, 'mousemove'],
@@ -16,108 +16,103 @@ export class IdleService {
     [window, 'resize'],
     [window, 'scroll'],
     [window, 'mousemove']
-    ];
+  ];
 
-    inactivityTime = 20;
-    private timeLapsedSinceInactivity = 0;
-    private subscription: Subscription;
-    private observeable$: Observable<any>;
-    private mergedObservable$: Observable<any>;
-    private observableOnIdleEnd = new Subject<any>();
+  private inactivityTime = 20;
+  private timeLapsedSinceInactivity = 0;
+  private subscription: Subscription;
+  private observable: Observable<any>;
+  private mergedObservable$: Observable<any>;
+  private observableOnIdleEnd = new Subject<any>();
 
-    /**
-     * Constructor
-     */
-    constructor(private _ngZone: NgZone) {
+  /**
+   * Constructor
+   */
+  constructor(private ngZone: NgZone) {
 
+  }
+
+  /**
+   * Init de idle timeout
+   * @param seconds time
+   */
+  public initIdleTimeout(seconds?: number): void {
+    if (seconds !== null) {
+      this.inactivityTime = seconds;
     }
+    const observableArray$: Observable<any>[] = [];
+    this.inactivityEvents.forEach((x) => {
+      observableArray$.push(fromEvent(x[0], x[1]));
+    });
+    this.mergedObservable$ = merge(...observableArray$);
+  }
 
-    /**
-     * Init de idle timeout
-     * @param seconds time
-     */
-    public initIdleTimeout(seconds?: number) {
-        if (seconds !== null) {
-            this.inactivityTime = seconds;
-        }
-        let observableArray$: Observable<any>[] = [];
-        this.inactivityEvents.forEach(x => {
-            observableArray$.push(fromEvent(x[0], x[1]))
-        })
-        this.mergedObservable$ = merge(...observableArray$);
+  /**
+   * Start the observable for idle
+   */
+  public startIdleTimeout(): void {
+    this.createObservable();
+  }
+
+  /**
+   * Unsubscribe the observable
+   */
+  public stopIdleTimeout(): void {
+    if (this.subscription && !this.subscription.closed) {
+      this.unsubscribeObservable();
     }
+  }
 
-    /**
-     * Start the observable for idle
-     */
-    public startIdelTimeout() {
-        this.createObserable();
-        //console.log('subscription started');
-    }
+  /**
+   * Get the observable when end the Idle time out
+   */
+  public getObservableOnEndedIdle(): Observable<any> {
+    return this.observableOnIdleEnd.asObservable();
+  }
 
-    /**
-     * Unsubscribe the observable
-     */
-    public stopIdleTimeout() {
-        if (this.subscription && !this.subscription.closed) {
-            this.unsubscribeObservable();
-        }
-    }
+  /**
+   *
+   */
+  private isItTimeToShowPopUp(val: number): void {
+    const timeLeftForInactive = this.inactivityTime - val;
+  }
 
-    /**
-     * Get the observable when end the Idle time out
-     */
-    public getObservableOnEndedIdle() {
-        return this.observableOnIdleEnd.asObservable();
-    }
+  /**
+   *
+   */
+  private createObservable(): void {
+    this.ngZone.runOutsideAngular(() => {
 
-    /**
-     * 
-     * @param val 
-     */
-    private isItTimeToShowPopUp(val: number) {
-        let timeLeftForInactive = this.inactivityTime - val;
-        //console.log(timeLeftForInactive);
-    }
+      this.observable = this.mergedObservable$
+        .pipe(
+          switchMap((ev) => interval(1000).pipe(take(this.inactivityTime))),
+          tap((value) => this.isItTimeToShowPopUp(value)),
+          skipWhile((x) => {
+            this.timeLapsedSinceInactivity = x;
+            return x !== this.inactivityTime - 1;
+          })
+        );
 
-    /**
-     * 
-     */
-    private createObserable(): void {
-        this._ngZone.runOutsideAngular(() => {
+      this.subscribeObservable();
+    });
 
-            this.observeable$ = this.mergedObservable$
-                .pipe(
-                    switchMap(ev => interval(1000).pipe(take(this.inactivityTime))),
-                    tap(value => this.isItTimeToShowPopUp(value)),
-                    skipWhile((x) => {
-                        this.timeLapsedSinceInactivity = x;
-                        return x != this.inactivityTime - 1;
-                    })
-                );
+  }
 
-            this.subscribeObservable();
-        });
+  /**
+   *
+   */
+  private subscribeObservable(): void {
+    this.subscription = this.observable.subscribe((x) => {
+      this.observableOnIdleEnd.next();
+      this.unsubscribeObservable();
+    });
+  }
 
-    }
-
-    /**
-     * 
-     */
-    private subscribeObservable() {
-        this.subscription = this.observeable$.subscribe((x) => {
-            //console.log(`subscribed for ${x + 1} sec`);
-            this.observableOnIdleEnd.next();
-            this.unsubscribeObservable();
-        });
-    }
-
-    /**
-     * 
-     */
-    private unsubscribeObservable() {
-        //console.log('  unsubscriebd');
-        this.subscription.unsubscribe();
-    }
+  /**
+   *
+   */
+  private unsubscribeObservable(): void {
+    this.subscription.unsubscribe();
+  }
 
 }

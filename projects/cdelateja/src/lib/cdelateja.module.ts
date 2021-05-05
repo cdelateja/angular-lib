@@ -53,11 +53,10 @@ import {WebSocketService} from './services/web-socket.service';
 import {NgxsModule} from '@ngxs/store';
 import {NgxsReduxDevtoolsPluginModule} from '@ngxs/devtools-plugin';
 import {NgxsFormPluginModule} from '@ngxs/form-plugin';
-import {AbstractValidator} from "./bindings/abstractvalidator";
-import {DynamicAbstractValidator} from "./bindings/dynamicabstractvalidator";
-import {Operations} from "./bindings/operations";
-import {Query} from "./bindings/query";
-
+import {AbstractValidator} from './bindings/abstractvalidator';
+import {DynamicAbstractValidator} from './bindings/dynamicabstractvalidator';
+import {Operations} from './bindings/operations';
+import {Query} from './bindings/query';
 
 @NgModule({
   declarations: [
