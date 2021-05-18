@@ -2,6 +2,7 @@ import {Component, ElementRef, forwardRef, Host, Input, OnInit, Optional, SkipSe
 import {AbstractComponent} from '../definition.components';
 import {ControlContainer, NG_VALUE_ACCESSOR} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
+import {Equals} from '../../dtos/definition-class';
 
 @Component({
   selector: 'ct-combo-box',
@@ -30,23 +31,19 @@ export class ComboBoxComponent extends AbstractComponent implements OnInit {
   @Input()
   public eqVal: string;
 
-  constructor(elRef: ElementRef, protected translate: TranslateService, @Optional() @Host() @SkipSelf() protected controlContainer: ControlContainer) {
+  constructor(elRef: ElementRef, protected translate: TranslateService,
+              @Optional() @Host() @SkipSelf() protected controlContainer: ControlContainer) {
     super(elRef, translate, controlContainer);
     this.val = null;
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     super.init();
   }
 
-  protected addLabel(el: string) {
-    super.addLabel('select');
-  }
-
-
-  writeValue(value: any): void {
+  public writeValue(value: any): void {
     if (value !== null) {
-      this.values.forEach(e => {
+      this.values.forEach((e) => {
         if (this.eqVal) {
           if (e[this.eqVal] === value[this.eqVal]) {
             super.writeValue(e);
@@ -61,4 +58,12 @@ export class ComboBoxComponent extends AbstractComponent implements OnInit {
       super.writeValue(value);
     }
   }
+
+  public compareObjects(o1: any, o2: any): boolean {
+    if (o1 instanceof Equals) {
+      return o1.equals(o2);
+    }
+    return o1 === o2;
+  }
+
 }

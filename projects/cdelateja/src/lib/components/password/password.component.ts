@@ -18,23 +18,13 @@ import {TranslateService} from '@ngx-translate/core';
 })
 export class PasswordComponent extends AbstractComponent implements OnInit {
 
-  // tslint:disable-next-line:ban-types
-  public show: Boolean = false;
-
-  constructor(elRef: ElementRef, protected translate: TranslateService, @Optional() @Host() @SkipSelf() protected controlContainer: ControlContainer) {
+  constructor(elRef: ElementRef, protected translate: TranslateService,
+              @Optional() @Host() @SkipSelf() protected controlContainer: ControlContainer) {
     super(elRef, translate, controlContainer);
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     super.init();
-  }
-
-  protected addLabel(el: string) {
-    super.addLabel('.input-group');
-  }
-
-  switch() {
-    this.show = !this.show;
   }
 
 }

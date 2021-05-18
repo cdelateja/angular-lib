@@ -1,5 +1,5 @@
 import {Component, ElementRef, Input} from '@angular/core';
-import {AbstractControl, ControlContainer, ControlValueAccessor, ValidationErrors} from '@angular/forms';
+import {AbstractControl, ControlContainer, ControlValueAccessor, FormControl, ValidationErrors} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
 
 /**
@@ -32,20 +32,22 @@ export class AbstractComponent implements ControlValueAccessor {
   @Input()
   public disabled = false;
 
+  @Input()
+  public hint: string;
+
   public controlErrors: ValidationErrors;
   public errorsKeys: string[];
   public status = 'clean';
   public validMessage = 'ValidatorMessages.valid';
+  public control: FormControl;
+  public val: any;
 
-  protected control: AbstractControl;
-  protected val: any;
   protected labelClass = 'ct-label';
   protected multipleErrors = false;
   protected onChange: any = () => {
   };
   protected onTouched: any = () => {
   };
-
 
   /**
    *
@@ -60,76 +62,39 @@ export class AbstractComponent implements ControlValueAccessor {
   /**
    *
    */
-  protected init() {
+  protected init(): void {
     if (this.controlContainer && this.formControlName) {
-      this.control = this.controlContainer.control.get(this.formControlName);
+      this.control = this.controlContainer.control.get(this.formControlName) as FormControl;
+    } else {
+      this.control = new FormControl(this.value, []);
     }
-    this.addLabel('input');
   }
 
   /**
    *
    * @param el
    */
-  protected addLabel(el: string) {
-    if (this.label) {
-      const input = this.element.querySelector(el);
-      if (input !== null) {
-        const form = this.element.querySelector('.form-group');
-        const label = document.createElement('label');
-        label.className = this.labelClass;
-        this.translate.get(this.label).subscribe(e => {
-          label.innerHTML = e;
-          form.insertBefore(label, input);
-          this.setRequired(this.control && this.control.validator !== null);
-          this.addToolTip();
-        });
-      }
-    }
+  protected addLabel(el: string): void {
   }
 
   /**
    *
    */
-  public addToolTip() {
-    if (this.toolTip) {
-      const label = this.element.querySelector('.ct-label');
-      if (label !== null) {
-        const span = document.createElement('span');
-        span.className = 'badge badge-warning data-tooltip';
-        span.innerHTML = '?';
-        span.setAttribute('data-tooltip', this.translate.instant(this.toolTip));
-        label.appendChild(span);
-      }
-    }
+  public addToolTip(): void {
   }
 
   /**
    *
    * @param required
    */
-  public setRequired(required: boolean) {
-    if (this.label) {
-      const label = this.element.querySelector('.ct-label');
-      const mark = this.element.querySelector('.required-field-indicator');
-      if (label !== null) {
-        if (required && mark == null) {
-          const span = document.createElement('span');
-          span.className = 'required-field-indicator';
-          span.innerHTML = '*';
-          label.appendChild(span);
-        } else if (!required && mark !== null) {
-          label.removeChild(mark);
-        }
-      }
-    }
+  public setRequired(required: boolean): void {
   }
 
   /**
    *
    * @param toolTip
    */
-  public setToolTip(toolTip: string) {
+  public setToolTip(toolTip: string): void {
     this.toolTip = toolTip;
   }
 
@@ -137,11 +102,11 @@ export class AbstractComponent implements ControlValueAccessor {
    * Sets the string value to the label
    * @param label
    */
-  public setLabel(label: string) {
+  public setLabel(label: string): void {
     this.label = label;
   }
 
-  public setMessagesErrors(controlErrors: ValidationErrors, multiMessageErrors: boolean) {
+  public setMessagesErrors(controlErrors: ValidationErrors, multiMessageErrors: boolean): void {
     this.controlErrors = controlErrors;
     if (this.controlErrors) {
       if (multiMessageErrors) {
@@ -150,25 +115,37 @@ export class AbstractComponent implements ControlValueAccessor {
         this.errorsKeys = [];
         this.errorsKeys.push(Object.keys(controlErrors)[0]);
       }
-      this.status = 'invalid'
+      this.status = 'invalid';
     }
   }
 
-  public cleanMessages() {
-    this.errorsKeys = [];
-    this.status = 'clean';
+  public validate(multiMessageErrors: boolean): void {
+    const controlErrors: ValidationErrors = this.control.errors;
+    if (controlErrors !== null) {
+      this.setMessagesErrors(controlErrors, multiMessageErrors);
+      this.control.markAsTouched();
+    } else if (this.control.validator !== null) {
+      this.setAsValid();
+    } else {
+      this.cleanMessages();
+    }
   }
 
-  public setAsValid() {
+  public cleanMessages(): void {
+    this.errorsKeys = [];
+    this.status = 'clean';
+    this.control.markAsUntouched();
+  }
+
+  public setAsValid(): void {
     this.errorsKeys = [];
     this.status = 'valid';
   }
 
-
   /**
    *
    */
-  public get value() {
+  public get value(): any {
     return this.val;
   }
 
@@ -176,7 +153,7 @@ export class AbstractComponent implements ControlValueAccessor {
    *
    * @param val
    */
-  public set value(val) {
+  public set value(val: any) {
     this.val = val;
     this.onChange(val);
     this.onTouched();

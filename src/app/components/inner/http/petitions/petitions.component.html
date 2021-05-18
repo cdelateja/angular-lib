@@ -1,0 +1,29 @@
+<p>Peticion hecha por método get</p>
+<div>
+  {{responseGet | json}}
+</div>
+
+<hr>
+
+<p>Manejo de cache get, en esta segunda petición obtuvo el valor por cache</p>
+<div>
+  {{cacheGet | json}}
+</div>
+
+<button type="button" class="btn btn-primary" (click)="toOtherPage()">
+  Ir a otra pagina
+</button>
+
+<hr>
+
+<p>Manejo de reintentos</p>
+<div>
+  {{errorRetry | json}}
+</div>
+
+<hr>
+
+<p>Manejo de errores</p>
+<div>
+  {{errorGet | json}}
+</div>

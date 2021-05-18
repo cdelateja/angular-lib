@@ -1,14 +1,18 @@
 <div class="form-group">
-  <input type="text" class="form-control"
-         [attr.name]="formControlName"
-         [ngClass]="{'is-invalid': status === 'invalid', 'is-valid': status === 'valid' }"
-         [(ngModel)]="value"
-         [disabled]="disabled"
-         placeholder="{{placeHolder | translate}}">
-  <div class="message-error invalid-feedback" *ngFor="let error of errorsKeys">
-    {{controlErrors[error].message | translate : controlErrors[error]}}
-  </div>
-  <div class="valid-feedback" *ngIf="status === 'valid'">
-    {{validMessage | translate}}
-  </div>
+  <mat-form-field>
+    <mat-label>
+      {{label | translate}}
+    </mat-label>
+    <input type="text" matInput
+           [formControl]="control"
+           [attr.name]="formControlName"
+           [attr.disabled]="disabled"
+           placeholder="{{placeHolder | translate}}">
+    <mat-hint *ngIf="status !== 'invalid'">
+      {{hint | translate}}
+    </mat-hint>
+    <mat-error *ngFor="let error of errorsKeys">
+      {{controlErrors[error].message | translate : controlErrors[error]}}
+    </mat-error>
+  </mat-form-field>
 </div>

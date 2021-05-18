@@ -32,6 +32,13 @@ export * from './lib/components/upload/upload.component';
 export * from './lib/components/wrapper/wrapper';
 export * from './lib/components/definition.components';
 export * from './lib/components/login/login.component';
+export * from './lib/components/navbar/navbar.component';
+export * from './lib/components/navbar/navbar-item/navbar-item.component';
+export * from './lib/components/navbar/navbar-brand/navbar-brand.component';
+export * from './lib/components/navbar/navbar-dropdown/navbar-dropdown.component';
+export * from './lib/components/navbar/navbar-body/navbar-body.component';
+export * from './lib/components/number-field/number-field.component';
+export * from './lib/components/catalog/catalog.component';
 
 export * from './lib/directives/currency/currency.pipe';
 export * from './lib/directives/currency/currencydirective.directive';
@@ -40,6 +47,7 @@ export * from './lib/directives/mask/phonemask.directive';
 export * from './lib/directives/spaces/spaces.directive';
 export * from './lib/directives/directives.validator';
 export * from './lib/directives/dynamic-field.directive';
+export * from './lib/directives/authorized.directive';
 
 export * from './lib/bindings/abstractvalidator';
 export * from './lib/bindings/dynamicabstractvalidator';
@@ -55,5 +63,6 @@ export * from './lib/services/idle.service';
 export * from './lib/services/login.service';
 export * from './lib/services/preferences.service';
 export * from './lib/services/web-socket.service';
+export * from './lib/services/app-auth-guard.guard';
 
 export * from './lib/utils/util';

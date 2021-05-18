@@ -17,8 +17,10 @@
     ],
     "paths": {
       "cdelateja": [
-        "dist/cdelateja/cdelateja",
         "dist/cdelateja"
+      ],
+      "cdelateja/*": [
+        "dist/cdelateja/*"
       ]
     }
   }

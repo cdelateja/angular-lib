@@ -57,6 +57,26 @@ import {AbstractValidator} from './bindings/abstractvalidator';
 import {DynamicAbstractValidator} from './bindings/dynamicabstractvalidator';
 import {Operations} from './bindings/operations';
 import {Query} from './bindings/query';
+import {NavbarComponent} from './components/navbar/navbar.component';
+import {NavbarItemComponent} from './components/navbar/navbar-item/navbar-item.component';
+import {NavbarBrandComponent} from './components/navbar/navbar-brand/navbar-brand.component';
+import {NavbarDropdownComponent} from './components/navbar/navbar-dropdown/navbar-dropdown.component';
+import {NavbarBodyComponent} from './components/navbar/navbar-body/navbar-body.component';
+import {RouterModule} from '@angular/router';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {AuthorizedDirective} from './directives/authorized.directive';
+import {AuthGuard} from './services/app-auth-guard.guard';
+import {NumberFieldComponent} from './components/number-field/number-field.component';
+import {CatalogComponent} from './components/catalog/catalog.component';
+import {MatInputModule} from '@angular/material/input';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatNativeDateModule, MatOptionModule} from '@angular/material/core';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatSelectModule} from '@angular/material/select';
+import {A11yModule} from '@angular/cdk/a11y';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [
@@ -98,7 +118,15 @@ import {Query} from './bindings/query';
     AbstractValidator,
     DynamicAbstractValidator,
     Operations,
-    Query
+    Query,
+    NavbarComponent,
+    NavbarItemComponent,
+    NavbarBrandComponent,
+    NavbarDropdownComponent,
+    NavbarBodyComponent,
+    AuthorizedDirective,
+    NumberFieldComponent,
+    CatalogComponent
   ],
   entryComponents: [
     DynamicTextFieldComponent,
@@ -112,7 +140,19 @@ import {Query} from './bindings/query';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    RouterModule,
     TranslateModule,
+    FontAwesomeModule,
+    A11yModule,
+    MatIconModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatRadioModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatButtonModule,
     NgxsModule.forRoot([LoginService]),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NgxsFormPluginModule.forRoot()
@@ -135,13 +175,15 @@ import {Query} from './bindings/query';
     IdleService,
     LoginService,
     CookieService,
-    WebSocketService
+    WebSocketService,
+    AuthGuard
   ],
   exports: [
     CurrencyPipe,
     CurrencyDirective,
     PhonemaskDirective,
     SpacesDirective,
+    AuthorizedDirective,
     PhonePipe,
     AbstractComponent,
     DynamicFieldDirective,
@@ -168,7 +210,14 @@ import {Query} from './bindings/query';
     DatePickerComponent,
     CommonModule,
     FilterDropDownComponent,
-    LoginComponent
+    LoginComponent,
+    NavbarComponent,
+    NavbarItemComponent,
+    NavbarBrandComponent,
+    NavbarDropdownComponent,
+    NavbarBodyComponent,
+    NumberFieldComponent,
+    CatalogComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })

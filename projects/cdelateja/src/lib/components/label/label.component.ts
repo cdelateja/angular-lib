@@ -10,19 +10,24 @@ import {TranslateService} from '@ngx-translate/core';
     provide: NG_VALUE_ACCESSOR,
     useExisting: forwardRef(() => LabelComponent),
     multi: true
-  }]
+  },
+    {
+      provide: AbstractComponent,
+      useExisting: LabelComponent
+    }]
 })
 export class LabelComponent extends AbstractComponent implements OnInit {
 
-  constructor(elRef: ElementRef, protected translate: TranslateService, @Optional() @Host() @SkipSelf()  protected controlContainer: ControlContainer) {
+  constructor(elRef: ElementRef, protected translate: TranslateService,
+              @Optional() @Host() @SkipSelf() protected controlContainer: ControlContainer) {
     super(elRef, translate, controlContainer);
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     super.init();
   }
 
-  protected addLabel(el: string) {
+  protected addLabel(el: string): void {
     super.addLabel('p');
   }
 

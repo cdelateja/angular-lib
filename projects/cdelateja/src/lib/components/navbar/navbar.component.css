@@ -1,0 +1,99 @@
+.ct-navbar {
+  display: block;
+  position: fixed;
+  -webkit-box-shadow: 5px 0 5px -5px #b9b9b9;
+  -moz-box-shadow: 5px 0 5px -5px #b9b9b9;
+  box-shadow: 5px 0 5px -5px #b9b9b9;
+  max-width: 252px;
+  width: 252px;
+  padding-top: 16px;
+  background-color: #fff;
+  top: 0;
+  bottom: 0;
+  z-index: 1001;
+}
+
+.ct-navbar.toggle {
+  max-width: 63px;
+}
+
+.ct-navbar.show {
+  display: block;
+}
+
+.ct-upper-navbar {
+  background-color: #3f7ef2;
+  margin-bottom: 10px;
+  box-shadow: 0 6px 5px -5px #b9b9b9;
+}
+
+.navbar-nav {
+  height: 100%;
+}
+
+.ct-upper-navbar .dropdown {
+  margin-right: 8px;
+}
+
+.content {
+  height: 100vh;
+  margin-left: 252px;
+}
+
+.content.toggle{
+  margin-left: 63px;
+}
+
+.icon-menu {
+  color: white;
+  margin-top: 4px;
+  cursor: pointer;
+}
+
+.btn-text {
+  vertical-align: middle;
+}
+
+.navbar-menu-button {
+  display: none;
+  margin-left: 8px;
+}
+
+.menu-overlay {
+  display: none;
+  background: rgba(26, 26, 26, 0.7);
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  top: 0;
+}
+
+.menu-overlay.show {
+  display: block;
+}
+
+.bottom-button {
+  position: absolute;
+  bottom: 0;
+}
+
+
+@media only screen and (max-width: 768px) {
+  /* For desktop: */
+  .ct-navbar {
+    display: none;
+  }
+
+  .content {
+    margin-left: 0;
+  }
+
+  .navbar-menu-button {
+    display: block;
+  }
+
+  .bottom-button {
+    display: none;
+  }
+}

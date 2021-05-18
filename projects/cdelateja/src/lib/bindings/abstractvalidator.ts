@@ -1,6 +1,5 @@
 import {AbstractControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
-import {Observable, Subject} from 'rxjs';
 import {
   createDynamicFormValidator,
   createFormValidator,
@@ -10,9 +9,10 @@ import {
 } from '../directives/directives.validator';
 import {ButtonType} from '../components/button/button.component';
 import {AlertType} from '../components/alert/alert.component';
-import {AfterViewInit, Component, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {FieldConfig} from '../dtos/definition-class';
 import {AbstractComponent} from '../components/definition.components';
+import {Observable, Subject, Subscription} from 'rxjs';
 
 /**
  *
@@ -25,7 +25,7 @@ import {AbstractComponent} from '../components/definition.components';
     </span>
   `
 })
-export class AbstractValidator implements OnInit, AfterViewInit {
+export class AbstractValidator implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChildren(AbstractComponent)
   protected fieldsComponents: QueryList<AbstractComponent>;
@@ -41,6 +41,7 @@ export class AbstractValidator implements OnInit, AfterViewInit {
   protected formBinder: FormBinder;
   protected fieldsMap = new Map<string, AbstractComponent>();
   protected multipleErrorsMessages = true;
+  protected subscriptions: Subscription[] = [];
 
   /**
    *
@@ -50,6 +51,10 @@ export class AbstractValidator implements OnInit, AfterViewInit {
   }
 
   public ngOnInit(): void {
+  }
+
+  public ngOnDestroy(): void {
+    this.subscriptions.forEach((s: Subscription) => s.unsubscribe());
   }
 
   public ngAfterViewInit(): void {
@@ -127,14 +132,7 @@ export class AbstractValidator implements OnInit, AfterViewInit {
    * @param abstractField
    */
   public validateField(control: AbstractControl, abstractField: AbstractComponent): void {
-    const controlErrors: ValidationErrors = control.errors;
-    if (controlErrors !== null) {
-      abstractField.setMessagesErrors(controlErrors, this.multipleErrorsMessages);
-    } else if (control.validator !== null) {
-      abstractField.setAsValid();
-    } else {
-      abstractField.cleanMessages();
-    }
+    abstractField.validate(this.multipleErrorsMessages);
   }
 
   /**
@@ -152,7 +150,7 @@ export class AbstractValidator implements OnInit, AfterViewInit {
     return this.formGroup.valueChanges;
   }
 
-  public disableField(field: string) {
+  public disableField(field: string): void {
     const control: AbstractControl = this.getControl(field);
     if (control) {
       control.disable();
@@ -200,7 +198,7 @@ export class AbstractValidator implements OnInit, AfterViewInit {
   private subscribeErrors(): void {
     this.errorsObserver.asObservable().subscribe((errors: Error[]) => {
       errors.forEach((e) => {
-        const control = this.formGroup.controls[e.field];
+        const control: AbstractControl = this.formGroup.controls[e.field];
         const abstractField = this.fieldsMap.get(e.field);
         control.setErrors(e.error);
         this.validateField(control, abstractField);
@@ -212,7 +210,7 @@ export class AbstractValidator implements OnInit, AfterViewInit {
    *
    * @param field
    */
-  protected cleanErrors(field: string) {
+  protected cleanErrors(field: string): void {
     const control = this.formGroup.controls[field];
     const abstractField = this.fieldsMap.get(field);
     control.setErrors(null);
@@ -223,7 +221,7 @@ export class AbstractValidator implements OnInit, AfterViewInit {
    * resets form and validation messages
    * @param value
    */
-  public reset(value?: any) {
+  public reset(value?: any): void {
     if (value) {
       this.formGroup.reset(value);
     } else {
@@ -237,7 +235,7 @@ export class AbstractValidator implements OnInit, AfterViewInit {
    * @param field
    * @param value
    */
-  public setValue(field: string, value: any) {
+  public setValue(field: string, value: any): void {
     this.formGroup.controls[field].setValue(value);
   }
 
@@ -271,7 +269,7 @@ export class AbstractValidator implements OnInit, AfterViewInit {
    *
    * @param validators
    */
-  protected addValidators(validators: Validator[]) {
+  protected addValidators(validators: Validator[]): void {
     const validatorsMap = new Map<string, ValidatorFn[]>();
     generateValidators(validatorsMap, validators);
     validatorsMap.forEach((value: ValidatorFn[], key: string) => {
@@ -283,29 +281,40 @@ export class AbstractValidator implements OnInit, AfterViewInit {
 
   /**
    *
+   * @param fields
+   * @protected
    */
-  protected setAsSingleMessageError() {
+  protected removeValidators(fields: string[]): void {
+    fields.forEach((field: string) => {
+      this.formGroup.controls[field].clearValidators();
+    });
+  }
+
+  /**
+   *
+   */
+  protected setAsSingleMessageError(): void {
     this.multipleErrorsMessages = false;
   }
 
   /**
    *
    */
-  protected setAsMultipleMessageError() {
+  protected setAsMultipleMessageError(): void {
     this.multipleErrorsMessages = true;
   }
 
 }
 
 export class Error {
-  field: string;
-  error = {
+  public field: string;
+  public error = {
     errorType: {
       message: ''
     }
   };
 
-  static create(field: string, message: string): Error {
+  public static create(field: string, message: string): Error {
     return message != null ? {
       field,
       error: {

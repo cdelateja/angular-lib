@@ -1,0 +1,18 @@
+.brand {
+  max-height: 45%;
+  max-width: 45%;
+}
+
+.sidebar-header {
+  margin-bottom: 20px;
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.toggle .brand {
+  max-height: 37px;
+  max-width: 37px;
+}
+.toggle .item-text {
+  display: none;
+}

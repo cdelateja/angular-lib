@@ -1,0 +1,33 @@
+.k-icon {
+  margin-right: 25px;
+  color: #1c304a80;
+}
+
+.dropdown-toggle {
+  color: #182739f0;
+  vertical-align: middle;
+}
+
+.nav-item {
+  min-height: 34px;
+}
+
+.nav-item-link {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.nav-item:hover {
+  background-color: #f0f3f5;
+  text-decoration: none;
+}
+
+.nav-item-link {
+  text-decoration: none;
+  color: #182739f0;
+  vertical-align: middle;
+}
+
+.toggle .item-text {
+  display: none;
+}

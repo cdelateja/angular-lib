@@ -18,16 +18,13 @@ import {TranslateService} from '@ngx-translate/core';
 })
 export class TextareaComponent extends AbstractComponent implements OnInit {
 
-  constructor(elRef: ElementRef, protected translate: TranslateService, @Optional() @Host() @SkipSelf() protected controlContainer: ControlContainer) {
+  constructor(elRef: ElementRef, protected translate: TranslateService,
+              @Optional() @Host() @SkipSelf() protected controlContainer: ControlContainer) {
     super(elRef, translate, controlContainer);
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     super.init();
-  }
-
-  protected addLabel(el: string) {
-    super.addLabel('textarea');
   }
 
 }

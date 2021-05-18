@@ -1,0 +1,10 @@
+<form class="dynamic-form" [formGroup]="formGroup" [attr.id]="formId">
+  <ng-container *ngFor="let field of regConfig;" dynamicField [field]="field" [group]="formGroup">
+  </ng-container>
+  <button type="button" class="btn btn-primary" (click)="submit()">
+    Guardar
+  </button>
+  <button type="button" class="btn btn-secondary" (click)="clean()">
+    Limpiar
+  </button>
+</form>

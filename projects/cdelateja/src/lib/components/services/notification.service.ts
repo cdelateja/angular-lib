@@ -14,7 +14,7 @@ export class NotificationPop {
     this.createNotification(body, this.notClass + ' alert-danger', header);
   }
 
-  private createNotification(strBody: string, type: string, strHeader?: string) {
+  private createNotification(strBody: string, type: string, strHeader?: string): void {
     const notification = document.createElement('div');
     notification.className = 'notification-dimmer';
 
@@ -51,13 +51,13 @@ export class NotificationPop {
     document.body.appendChild(notification);
     document.body.className = 'modal-open';
     setTimeout(
-      function () {
+      function() {
         message.setAttribute('style', 'transform: translate(-50%, 0%);');
       }, 200);
-    message.addEventListener('click', function () {
+    message.addEventListener('click', function() {
       message.setAttribute('style', 'transform: translate(-50%, -117%);');
       setTimeout(
-        function () {
+        function() {
           document.body.removeChild(notification);
           document.body.className = '';
         }, 500);

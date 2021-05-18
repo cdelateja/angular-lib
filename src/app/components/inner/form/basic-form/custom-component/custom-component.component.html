@@ -1,0 +1,13 @@
+<span class="form-group" [formGroup]="group">
+  <ct-textfield [label]="label"
+                [placeHolder]="placeHolder"
+                [formControlName]="formControlName"></ct-textfield>
+  <div class="form-control" hidden
+       [ngClass]="{'is-invalid': status === 'invalid', 'is-valid': status === 'valid' }"></div>
+  <div class="message-error invalid-feedback" *ngFor="let error of errorsKeys">
+    {{controlErrors[error].message | translate : controlErrors[error]}}
+  </div>
+  <div class="valid-feedback" *ngIf="status === 'valid'">
+    {{validMessage | translate}}
+  </div>
+</span>

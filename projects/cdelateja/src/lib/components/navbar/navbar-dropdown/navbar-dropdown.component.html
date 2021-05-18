@@ -1,0 +1,13 @@
+<li class="nav-item dropdown" [ngClass]="{'toggle': toggle}">
+  <a class="nav-item-link dropdown-toggle collapsed" data-toggle="collapse"
+     aria-expanded="false"
+     [ngClass]="{'dropdown-toggle': !toggle}"
+     [attr.aria-controls]="id"
+     [attr.data-target]="'#' + id">
+    <fa-icon class="k-icon" [icon]="icon"></fa-icon>
+    <span class="item-text">{{label | translate}}</span>
+  </a>
+</li>
+<div class="collapse" [attr.id]="id">
+  <ng-content></ng-content>
+</div>

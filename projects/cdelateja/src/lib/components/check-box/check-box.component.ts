@@ -18,26 +18,14 @@ import {TranslateService} from '@ngx-translate/core';
 })
 export class CheckBoxComponent extends AbstractComponent implements OnInit {
 
-  constructor(elRef: ElementRef, protected translate: TranslateService,  @Optional() @Host() @SkipSelf() protected controlContainer: ControlContainer) {
+  constructor(elRef: ElementRef, protected translate: TranslateService,
+              @Optional() @Host() @SkipSelf() protected controlContainer: ControlContainer) {
     super(elRef, translate, controlContainer);
+    this.value = false;
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     super.init();
-  }
-
-  protected addLabel(el: string) {
-    if (this.label) {
-      const form = this.element.querySelector('.form-check');
-      const label = document.createElement('label');
-      label.className = this.labelClass;
-      this.translate.get(this.label).subscribe(e => {
-        label.innerHTML = e;
-        form.appendChild(label);
-        this.setRequired(this.control && this.control.validator !== null);
-        this.addToolTip();
-      });
-    }
   }
 
 }

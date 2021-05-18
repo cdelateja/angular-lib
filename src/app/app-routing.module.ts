@@ -1,14 +1,13 @@
 import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
-import {HomeComponent} from "./components/routes/home/home.component";
-import {FormComponent} from "./components/inner/form/form/form.component";
-import {ChallengeComponent} from "./components/inner/challenge/challenge/challenge.component";
+import {HomeComponent} from './components/routes/home/home.component';
+import {HelloComponent} from './components/routes/hello/hello.component';
+
 
 const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: 'full'},
   {path: 'home', component: HomeComponent},
-  {path: 'form', component: FormComponent},
-  {path: 'challenge', component: ChallengeComponent},
+  {path: 'hello', component: HelloComponent},
   {path: '**', pathMatch: 'full', redirectTo: '/home'}
 ];
 

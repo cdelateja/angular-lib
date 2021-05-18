@@ -1,3 +1,5 @@
-<button  class="btn" [ngClass]="type"
-         [attr.disabled]="disabled ? '' : null"
-         [attr.data-tooltip]="toolTip | translate"><ng-content></ng-content>{{label | translate}}</button>
+<button class="btn"
+        [ngClass]="type"
+        [disabled]="disabled">
+  <ng-content></ng-content>
+</button>

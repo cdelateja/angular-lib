@@ -1,0 +1,62 @@
+<nav class="ct-navbar" [ngClass]="{
+      'show': show,
+      'hide': !show,
+      'toggle': toggle}"
+     (mouseover)="onMouseOver()"
+     (mouseleave)="onMouseOut()">
+
+  <ng-content select="ct-navbar-brand"></ng-content>
+
+
+  <ul class="navbar-nav">
+    <ng-content></ng-content>
+
+    <div class="bottom-button">
+      <button type="button" class="btn btn-primary"
+              *ngIf="toggleClick"
+              (click)="toggleExpand()">
+        <fa-icon class="k-icon" [icon]="faArrowRight"></fa-icon>
+      </button>
+
+      <button type="button" class="btn btn-primary"
+              *ngIf="!toggleClick"
+              (click)="toggleCollapse()">
+        <fa-icon class="k-icon" [icon]="faArrowLeft"></fa-icon>
+      </button>
+    </div>
+  </ul>
+
+</nav>
+<div class="content" [ngClass]="{'toggle': toggle}">
+
+  <nav class="ct-upper-navbar navbar navbar-expand-lg">
+
+    <div class="icon-menu navbar-menu-button float-left" (click)="showMenu()">
+      <fa-icon class="k-icon" [icon]="faBars"></fa-icon>
+    </div>
+
+    <div class="ml-auto">
+      <div class="dropdown dropleft">
+        <div class="icon-menu" data-toggle="dropdown"
+             aria-haspopup="true" aria-expanded="false">
+          <fa-icon class="k-icon" [icon]="faEllipsisV"></fa-icon>
+        </div>
+        <div class="dropdown-menu">
+          <button type="button" class="btn btn-link dropdown-item" (click)="logout()">
+            <fa-icon class="k-icon" [icon]="faArrowRight"></fa-icon>
+            <span class="btn-text">{{'Core.btnExit' | translate}}</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </nav>
+
+  <ng-content select="ct-navbar-body"></ng-content>
+
+</div>
+<div class="menu-overlay" [ngClass]="{
+      'show': show,
+      'hide': !show}" (click)="hideMenu()">
+</div>

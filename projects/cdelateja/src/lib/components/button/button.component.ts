@@ -24,7 +24,7 @@ export class ButtonComponent implements OnInit {
     this.element = elRef.nativeElement;
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
   }
 
   public getElement(): HTMLInputElement {
@@ -35,15 +35,9 @@ export class ButtonComponent implements OnInit {
 
 export class ButtonType {
   public DEFAULT = 'btn-secondary';
-  public PRIMARY = 'btn-primary';
-  public SUCCESS = 'btn-success';
-  public DANGER = 'btn-danger';
-  public WARNING = 'btn-warning';
-  public INFO = 'btn-info';
-  public DEFAULT_BLOCK = this.DEFAULT + ' btn-block';
-  public PRIMARY_BLOCK = this.PRIMARY + ' btn-block';
-  public SUCCESS_BLOCK = this.SUCCESS + ' btn-block';
-  public DANGER_BLOCK = this.DANGER + ' btn-block';
-  public WARNING_BLOCK = this.WARNING + ' btn-block';
-  public INFO_BLOCK = this.INFO + ' btn-block';
+  public PRIMARY = 'primary';
+  public SUCCESS = 'success';
+  public DANGER = 'warn';
+  public WARNING = 'accent';
+  public INFO = 'info';
 }

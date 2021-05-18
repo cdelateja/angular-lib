@@ -32,7 +32,7 @@ export class ConfirmationDialog {
     return this.confirm.asObservable();
   }
 
-  public createConfirmation(strHeader: string, strBody: string) {
+  public createConfirmation(strHeader: string, strBody: string): void {
     const container = document.createElement('div');
 
     const backdrop = document.createElement('div');

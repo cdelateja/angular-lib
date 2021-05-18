@@ -81,7 +81,7 @@ export class ClientService {
       headers: new HttpHeaders({
         Authorization: this.httpOptions.headers.get('Authorization')
       })
-    }).pipe(map((event) => {
+    }).pipe(map((event: any) => {
         switch (event.type) {
           case HttpEventType.UploadProgress:
             const progress = Math.round(100 * event.loaded / event.total);

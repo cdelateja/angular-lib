@@ -24,7 +24,7 @@ export class TextfieldComponent extends AbstractComponent implements OnInit {
     super(elRef, translate, controlContainer);
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     super.init();
   }
 

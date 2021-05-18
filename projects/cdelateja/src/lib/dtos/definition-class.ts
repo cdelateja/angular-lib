@@ -23,7 +23,6 @@ export class Token {
   public refresh_token: string;
   public expires_in: string;
   public scope: string;
-  public compania: string;
   public jti: string;
 
 }
@@ -32,23 +31,14 @@ export class Token {
  * Class definition for the user in Oauth
  */
 export class User {
-  constructor(public userName: string, public authorities: string[]) {
-  }
-}
-
-/**
- * Class definition user IAM
- */
-export class UserIAM {
-  public interno: boolean;
-  public activo: boolean;
-  public administrador: boolean;
   public id: number;
-  public idUsuario: number;
-  public nombre: string;
-  public nombreUsuario: string;
-  public telefono: string;
+  public userName: string;
   public email: string;
+  public password: string;
+  public secretKey: string;
+  public ip: string;
+  public idRole: number;
+  public authorities: string[] = [];
 }
 
 /**
@@ -87,9 +77,8 @@ export class LoginRequest {
 export class ClientOptions {
   public delay?: number;
   public take?: number;
-  public bufferSize?: number = 0;
+  public bufferSize = 0;
 }
-
 
 export class PreferenciaGridRequest {
   public id: number = null;
@@ -118,12 +107,30 @@ export class FiltroRequest {
 export class IdRequest {
   public id: number;
 }
+
+export class ValidateReq {
+  public key: string;
+}
+
 export class MultipleSessionError implements Error {
-  message: string;
-  name: string;
+  public message: string;
+  public name: string;
 
   constructor(message) {
     this.message = message;
     this.name = 'MultipleSessionError';
   }
+}
+
+export class Equals {
+  public equals(o2: any): boolean {
+    return this === o2;
+  }
+}
+
+export function ifEquals(eqVal: string, o1: any, o2: any): boolean {
+  if (o2 === null) {
+    return false;
+  }
+  return o1[eqVal] === o2[eqVal];
 }

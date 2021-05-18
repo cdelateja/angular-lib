@@ -1,5 +1,6 @@
 import {Component} from '@angular/core';
-import {TranslateService} from "@ngx-translate/core";
+import {OauthService, ConfigService} from 'cdelateja';
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +9,8 @@ import {TranslateService} from "@ngx-translate/core";
 })
 export class AppComponent {
 
-  constructor(protected translate: TranslateService) {
+  constructor(private oauthService: OauthService, private configService: ConfigService,
+              private translate: TranslateService) {
     this.translate.setDefaultLang('es');
   }
-
 }

@@ -86,8 +86,8 @@ export class IdleService {
       this.observable = this.mergedObservable$
         .pipe(
           switchMap((ev) => interval(1000).pipe(take(this.inactivityTime))),
-          tap((value) => this.isItTimeToShowPopUp(value)),
-          skipWhile((x) => {
+          tap((value: any) => this.isItTimeToShowPopUp(value)),
+          skipWhile((x: number) => {
             this.timeLapsedSinceInactivity = x;
             return x !== this.inactivityTime - 1;
           })

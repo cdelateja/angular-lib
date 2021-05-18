@@ -7,7 +7,7 @@ import {Component, Input, OnInit} from '@angular/core';
 export class AlertComponent implements OnInit {
 
   @Input()
-  public type: string = new AlertType().DEAFULT;
+  public type: string = new AlertType().DEFAULT;
 
   @Input()
   public label: string;
@@ -21,7 +21,7 @@ export class AlertComponent implements OnInit {
 }
 
 export class AlertType {
-  public DEAFULT = 'alert-secondary';
+  public DEFAULT = 'alert-secondary';
   public PRIMARY = 'alert-primary';
   public SUCCESS = 'alert-success';
   public DANGER = 'alert-danger';

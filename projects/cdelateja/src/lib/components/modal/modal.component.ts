@@ -1,5 +1,5 @@
 import {Component, ComponentFactoryResolver, Input, OnInit, ViewChild, ViewContainerRef, ComponentRef} from '@angular/core';
-import {ModalService} from '../../components/services/modal.service';
+import {ModalService} from '../services/modal.service';
 
 @Component({
   selector: 'ct-modal',
@@ -13,12 +13,12 @@ export class ModalComponent implements OnInit {
   @ViewChild('modalcontainer', {static: false})
   public entry: ViewContainerRef;
 
-  public show: Boolean = false;
+  public show = false;
 
   constructor(private resolver: ComponentFactoryResolver, private modalService: ModalService) {
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.modalService.getCloseCall().subscribe(() => {
       this.close();
     });
@@ -30,7 +30,7 @@ export class ModalComponent implements OnInit {
     return this.entry.createComponent(factory);
   }
 
-  public close() {
+  public close(): void {
     this.show = false;
     document.body.className = '';
   }

@@ -42,24 +42,25 @@ export class SelectTwinComponent extends AbstractComponent implements OnInit {
   public localValues: any = [];
   public selValues: any = [];
 
-  constructor(elRef: ElementRef, protected translate: TranslateService, @Optional() @Host() @SkipSelf() protected controlContainer: ControlContainer) {
+  constructor(elRef: ElementRef, protected translate: TranslateService,
+              @Optional() @Host() @SkipSelf() protected controlContainer: ControlContainer) {
     super(elRef, translate, controlContainer);
     this.val = null;
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     super.init();
     this.toLocalValues();
   }
 
-  protected addLabel(el: string) {
+  protected addLabel(el: string): void {
     if (this.label) {
       const input = this.element.querySelector('.first-twin');
       if (input !== null) {
         const form = this.element.querySelector('.parent');
         const label = document.createElement('label');
         label.className = this.labelClass;
-        this.translate.get(this.label).subscribe(e => {
+        this.translate.get(this.label).subscribe((e) => {
           label.innerHTML = e;
           form.insertBefore(label, input);
           this.setRequired(this.control && this.control.validator !== null);
@@ -69,20 +70,20 @@ export class SelectTwinComponent extends AbstractComponent implements OnInit {
     }
   }
 
-  private toLocalValues() {
+  private toLocalValues(): void {
     this.localValues = [];
-    this.values.forEach(e => this.localValues.push(e));
+    this.values.forEach((e) => this.localValues.push(e));
   }
 
-  writeValue(items: any): void {
+  public writeValue(items: any): void {
     this.toLocalValues();
     this.selValues = [];
     if (items === null || items === undefined) {
       this.onChange(null);
       super.writeValue(null);
     } else {
-      this.localValues.forEach(e => {
-        items.forEach(val => {
+      this.localValues.forEach((e) => {
+        items.forEach((val) => {
           if (e[this.eqVal] === val[this.eqVal]) {
             this.selectElement(e);
           }
@@ -91,23 +92,23 @@ export class SelectTwinComponent extends AbstractComponent implements OnInit {
     }
   }
 
-  private callOnChanged(value: any) {
+  private callOnChanged(value: any): void {
     const val = value.length === 0 ? null : value;
     this.onChange(val);
     super.writeValue(val);
   }
 
-  public selectElement(el: any) {
+  public selectElement(el: any): void {
     const idx = this.localValues.indexOf(el);
     this.localValues.splice(idx, 1);
     this.selValues.push(el);
     this.callOnChanged(this.selValues);
   }
 
-  public toRight() {
+  public toRight(): void {
     Array.from(this.leftSelect.nativeElement.options).forEach((opt: any) => {
       if (opt.selected) {
-        this.localValues.forEach(e => {
+        this.localValues.forEach((e) => {
           const item = this.itemCaption !== undefined ? e[this.itemCaption] : e;
           if (item === opt.text) {
             this.selectElement(e);
@@ -117,17 +118,17 @@ export class SelectTwinComponent extends AbstractComponent implements OnInit {
     });
   }
 
-  public removeElement(el: any) {
+  public removeElement(el: any): void {
     const idx = this.selValues.indexOf(el);
     this.selValues.splice(idx, 1);
     this.localValues.push(el);
     this.callOnChanged(this.selValues);
   }
 
-  public toLeft() {
+  public toLeft(): void {
     Array.from(this.rightSelect.nativeElement.options).forEach((opt: any) => {
       if (opt.selected) {
-        this.selValues.forEach(e => {
+        this.selValues.forEach((e) => {
           const item = this.itemCaption !== undefined ? e[this.itemCaption] : e;
           if (item === opt.text) {
             this.removeElement(e);

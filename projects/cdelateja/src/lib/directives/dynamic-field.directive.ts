@@ -1,5 +1,5 @@
 import {ComponentFactoryResolver, Directive, Input, ViewContainerRef} from '@angular/core';
-import {FormGroup} from "@angular/forms";
+import {FormGroup} from '@angular/forms';
 import {FieldConfig} from '../dtos/definition-class';
 import {
   DynamicCheckBoxComponent,
@@ -7,7 +7,7 @@ import {
   DynamicDatePickerComponent,
   DynamicRadioButtonComponent,
   DynamicTextFieldComponent
-} from "../components/wrapper/wrapper";
+} from '../components/wrapper/wrapper';
 
 @Directive({
   selector: '[dynamicField]'
@@ -24,19 +24,18 @@ export class DynamicFieldDirective {
   constructor(private resolver: ComponentFactoryResolver, private container: ViewContainerRef) {
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     const factory = this.resolver.resolveComponentFactory(componentMapper[this.field.type]);
     this.componentRef = this.container.createComponent(factory);
     this.componentRef.instance.field = this.field;
     this.componentRef.instance.group = this.group;
   }
 
-  public getDynamicComponent() {
+  public getDynamicComponent(): any {
     return this.componentRef.instance;
   }
 
 }
-
 
 const componentMapper = {
   input: DynamicTextFieldComponent,

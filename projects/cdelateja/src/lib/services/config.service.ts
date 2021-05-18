@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
-import {map} from "rxjs/operators";
-import {ConfigFile} from "../dtos/definition-class";
+import {HttpClient} from '@angular/common/http';
+import {map} from 'rxjs/operators';
+import {ConfigFile} from '../dtos/definition-class';
 
 @Injectable({
   providedIn: 'root'
@@ -16,19 +16,32 @@ export class ConfigService {
   }
 
   public async load(): Promise<any> {
-    this.configFile = await this.getConfigFile();
+    this.configFile = await this.getConfigFile('config.json');
     if (this.configFile) {
       this.properties = await this.getProperties();
+    } else {
+      this.properties = await this.getConfigFile('local.json');
+    }
+    if (this.properties) {
       localStorage.setItem(this.propsName, JSON.stringify(this.properties));
     }
   }
 
   public get(key: string): any {
-    return JSON.parse(localStorage.getItem(this.propsName))[key];
+    return this.getValue(JSON.parse(localStorage.getItem(this.propsName)), key);
   }
 
-  private getConfigFile(): Promise<any> {
-    return this.http.get('assets/config/config.json')
+  private getValue(obj: any, modelName: string): any {
+    const arr = modelName.split('.');
+    let val = obj;
+    arr.forEach((item: string) => {
+      val = val[item];
+    });
+    return val;
+  }
+
+  private getConfigFile(file: string): Promise<any> {
+    return this.http.get('assets/config/' + file)
       .pipe(map((data: any) => {
         return data;
       }))
@@ -63,7 +76,7 @@ export class ConfigService {
       for (const name of this.configFile.names) {
         await this.getConfigProperty(name, this.configFile.profile).then((result) => {
           if (result) {
-            result['propertySources'].forEach(e => {
+            result['propertySources'].forEach((e) => {
               if (e['name'].includes(this.configFile.profile)) {
                 merged = Object.assign(merged, e['source']);
               }

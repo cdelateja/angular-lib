@@ -1,0 +1,33 @@
+<div class="form-group">
+  <select multiple
+          class="form-control d-none"
+          [(ngModel)]="value">
+    <option *ngFor="let item of values"
+            [ngValue]=item>
+      {{item.value}}
+    </option>
+  </select>
+  <div class="form-row mb-2" *ngFor="let item of values; let i = index">
+    <div class="col-10">
+      <input type="text"
+             class="form-control"
+             [(ngModel)]="item.value">
+    </div>
+    <div class="col-1">
+      <button type="button" class="btn btn-outline-danger btn-sm" (click)="remove(i)">
+        <fa-icon [icon]="faTrash"></fa-icon>
+      </button>
+    </div>
+  </div>
+  <div class="form-row">
+    <button type="button" class="btn btn-outline-primary btn-sm" (click)="add()">
+      {{'Core.btnAdd' | translate}}
+    </button>
+  </div>
+  <div class="message-error invalid-feedback" *ngFor="let error of errorsKeys">
+    {{controlErrors[error].message | translate : controlErrors[error]}}
+  </div>
+  <div class="valid-feedback" *ngIf="status === 'valid'">
+    {{validMessage | translate}}
+  </div>
+</div>

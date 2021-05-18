@@ -1,69 +1,56 @@
+import {Equals, ifEquals} from 'cdelateja';
+
 export class BasicForm {
   public name: string = '';
   public alias: string = '';
   public password: string = '';
+  public age: number = null;
   public birthday: string = '';
   public comments: string = '';
-  public terms: any = null;
-  public country: any = null;
-  public gender: any = null;
+  public terms: boolean = null;
+  public country: any = new Pais(1, 'Mexico');
+  public gender: any = {id: 1, nombre: 'Masculino'};
   public hobbies: any = null;
   public myOther: any = null;
 }
 
-export class PageForm {
-  public name = '';
-  public templateId: any = null;
+export class Group {
+  public name: string = '';
+  public description: string = '';
+  public status: string = '';
+  public group: string = '';
+  public master: string = '';
+  public funds: string = '';
+  public accounts: Account[] = [];
 }
 
-export class PageResponse {
-  public name = '';
-  public templateId: Template = null;
+export class Balance {
+  public today: number;
+  public balance: number;
 }
 
-export class PagesResponse {
-  data: DataPage[] = [];
+export class Movement {
+  public balance: number;
+  public operation: string;
+  public date: Date = new Date();
 }
 
-export class DataPage {
-  public type = '';
-  public id = '';
-  public attributes: AttributePage = null;
+export class Login {
+  public userName = '';
+  public password = '';
 }
 
-export class AttributePage {
-  public title = '';
-  public url = '';
-  public pageType = '';
-  public deleted: boolean = false;
-}
+export class Pais extends Equals {
+  public id: number;
+  public pais: string;
 
-export class PageRequest {
-  public data = {
-    type: 'create-new-page',
-    attributes: {
-      name: '',
-      templateId: 0
-    }
+  constructor(id: number, pais: string) {
+    super();
+    this.id = id;
+    this.pais = pais;
   }
-}
 
-export class Template {
-  name: String = '';
-  pageId = 0;
-}
-
-export class TemplatesResponse {
-  data: DataTemplate[] = [];
-}
-
-export class DataTemplate {
-  public type = '';
-  public id = '';
-  public attributes: AttributeTemplate = null;
-}
-
-export class AttributeTemplate {
-  public pageId = 0;
-  public name = '';
+  equals(o2: any): boolean {
+    return ifEquals('id', this, o2);
+  }
 }

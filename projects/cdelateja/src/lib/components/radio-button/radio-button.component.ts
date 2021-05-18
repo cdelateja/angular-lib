@@ -24,24 +24,32 @@ export class RadioButtonComponent extends AbstractComponent implements OnInit {
   @Input()
   public itemCaption: string;
 
-  constructor(elRef: ElementRef, protected translate: TranslateService, @Optional() @Host() @SkipSelf() protected controlContainer: ControlContainer) {
+  @Input()
+  public eqVal: string;
+
+  constructor(elRef: ElementRef, protected translate: TranslateService,
+              @Optional() @Host() @SkipSelf() protected controlContainer: ControlContainer) {
     super(elRef, translate, controlContainer);
+    this.value = null;
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     super.init();
   }
 
-  protected addLabel(el: string) {
-    const before = this.element.querySelector('.form-control');
-    if (before !== null) {
-      const form = this.element.querySelector('.form-group');
-      const label = document.createElement('label');
-      label.className = this.labelClass;
-      form.insertBefore(label, before);
-      this.setRequired(this.control && this.control.validator !== null);
-      this.addToolTip();
+  public compareObjects(o1: any): boolean {
+    if (this.value !== null) {
+      if (this.eqVal) {
+        if (o1[this.eqVal] === this.value[this.eqVal]) {
+          return true;
+        }
+      } else {
+        if (o1 === this.value) {
+          return true;
+        }
+      }
     }
+    return false;
   }
 
 }

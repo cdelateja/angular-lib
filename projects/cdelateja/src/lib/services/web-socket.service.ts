@@ -22,7 +22,7 @@ export class WebSocketService {
     this.webSocketEndPoint = this.configService.get('lsServers.zuul.webSocketNotification') + '?user=';
   }
 
-  connect() {
+  public connect(): void {
     if (this.oauthService.getUser() !== null) {
       this.webSocketEndPoint = this.webSocketEndPoint + this.oauthService.getUser().userName;
       console.log('Initialize WebSocket Connection');

@@ -1,18 +1,22 @@
 <div class="form-group">
-  <select class="form-control"
-          [attr.name]="formControlName"
-          [ngClass]="{'is-invalid': status === 'invalid', 'is-valid': status === 'valid' }"
-          [(ngModel)]="value"
-          [attr.disabled]="disabled ? '' : null">
-    <option [ngValue]="null">{{placeHolder | translate}}</option>
-    <option *ngFor="let item of values" [ngValue]=item>
-      {{itemCaption !== undefined ? item[itemCaption] : item}}
-    </option>
-  </select>
-  <div class="message-error invalid-feedback" *ngFor="let error of errorsKeys">
-    {{controlErrors[error].message | translate : controlErrors[error]}}
-  </div>
-  <div class="valid-feedback" *ngIf="status === 'valid'">
-    {{validMessage | translate}}
-  </div>
+  <mat-form-field appearance="fill">
+    <mat-label>
+      {{label | translate}}
+    </mat-label>
+    <mat-select [formControl]="control"
+                [compareWith]="compareObjects"
+                [attr.name]="formControlName"
+                [attr.disabled]="disabled">
+      <mat-option *ngFor="let item of values"
+                  [value]="item">
+        {{itemCaption !== undefined ? item[itemCaption] : item}}
+      </mat-option>
+    </mat-select>
+    <mat-hint *ngIf="status !== 'invalid'">
+      {{hint | translate}}
+    </mat-hint>
+    <mat-error *ngFor="let error of errorsKeys">
+      {{controlErrors[error].message | translate : controlErrors[error]}}
+    </mat-error>
+  </mat-form-field>
 </div>

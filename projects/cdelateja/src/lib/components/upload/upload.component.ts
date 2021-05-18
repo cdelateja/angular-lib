@@ -34,21 +34,21 @@ export class UploadComponent extends AbstractComponent implements OnInit {
 
   }
 
-  writeValue(value: any): void {
+  public writeValue(value: any): void {
     if (value == null) {
       this.progress = 0;
       this.value = 'Choose file';
     }
   }
 
-  public onSelectedFile(event: any) {
+  public onSelectedFile(event: any): void {
     if (event.target.files.length > 0) {
       this.file = event.target.files[0];
       this.progress = 0;
     }
   }
 
-  public upload() {
+  public upload(): void {
     const formData = new FormData();
     formData.append('file', this.file);
 

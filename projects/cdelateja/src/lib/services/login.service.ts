@@ -2,7 +2,7 @@ import {Injectable, NgZone} from '@angular/core';
 
 import {OauthService} from './oauth.service';
 import {ConfigService} from './config.service';
-import {LoginRequest, MultipleSessionError, Token, User, UserIAM} from '../dtos/definition-class';
+import {LoginRequest, MultipleSessionError, Token, User} from '../dtos/definition-class';
 import {Action, Store} from '@ngxs/store';
 import {LoginAction, LogoutAction, STATUS} from './login.action';
 import {fromEvent, Observable} from 'rxjs';
@@ -15,7 +15,7 @@ import {Router} from '@angular/router';
 export class LoginService {
 
   public rolesList: string[];
-  private iamUrl: string;
+  private oauthUrl: string;
   private storageEvent: Observable<Event>;
   private statusApp = 'NOT_LOGGED';
 
@@ -47,7 +47,6 @@ export class LoginService {
   public initListeners(): void {
     this.storageEvent = fromEvent(window, 'storage');
     this.storageEvent.pipe(delay(500)).subscribe((data) => {
-      console.log('initListeners');
       const action = localStorage.getItem('ACTION_NAME');
       if (this.statusApp === 'NOT_LOGGED') {
         if (action === STATUS.login) {
@@ -65,28 +64,12 @@ export class LoginService {
   public setProperties(appName: string, password: string, pathHome: string): void {
     localStorage.setItem('PATH_HOME', pathHome);
     this.oauthService.setProperties(appName, password);
-    this.iamUrl = this.configService.get('lsServers.zuul.iamserverrepo');
+    this.oauthUrl = this.configService.get('servers.oauth.url');
   }
 
   public validateSso(): void {
-    console.log('Antes del serivico de ssCheckCookie');
-    this.oauthService.ssoCheckCookie().then((result) => {
-      if (result && result !== '') {
-        this.loginWithSsoCookie(result);
-      }
-    });
-  }
-
-  public loginWithSsoCookie(cookie: string): void {
-    const userPassword: string[] = cookie.split(':');
-    const loginRequest = new LoginRequest();
-    loginRequest.username = userPassword[0];
-    loginRequest.password = userPassword[1];
-    loginRequest.autoLogin = true;
-    console.log('Entrando al login', loginRequest);
-    this.validateLoginWithCookie(loginRequest).then((r) => {
-      if (r) {
-        console.log(r);
+    this.oauthService.ssoCheckCookie().then((result: Token) => {
+      if (result) {
         this.login();
       }
     });
@@ -95,49 +78,39 @@ export class LoginService {
   /**
    * Service to retrieve the user object
    *
-   * @param params login request object
+   * @param request login request object
    */
-  public async validateLogin(params: LoginRequest): Promise<boolean> {
+  public async validateLogin(request: LoginRequest): Promise<boolean> {
+    let isAuth = false;
     try {
-      await this.oauthService.authenticateAndRequestCookie(params.username, params.password, params.autoLogin)
-        .then((authenticated) => {
-          if (authenticated) {
-            this.rolesList = this.oauthService.getUser().authorities;
-            this.login();
+      await this.oauthService.authenticateUser(request.username, request.password, request.autoLogin)
+        .then((isAuthenticated: boolean) => {
+          if (isAuthenticated) {
+            // this.rolesList = this.oauthService.getUser().authorities;
           }
+          isAuth = isAuthenticated;
         }).catch((error) => {
           throw error;
         });
-      if (this.getIsAuthenticated()) {
-        await this.oauthService.withToken().get(`${this.iamUrl}/usuario/admin/by/nombre?nombre=${params.username}`)
-          .toPromise().then((result) => {
-            localStorage.setItem('userIAM', JSON.stringify(result));
-          });
-      }
-      return this.getIsAuthenticated();
     } catch (e) {
       if (e instanceof MultipleSessionError) {
         throw e;
       }
-      return false;
     }
+    return new Promise((resolve) => {
+      resolve(isAuth);
+    });
   }
 
   public async validateLoginWithCookie(params: LoginRequest): Promise<boolean> {
     await this.oauthService.authenticate(params.username, params.password)
-      .then((authenticated) => {
+      .then((authenticated: boolean) => {
         if (authenticated) {
-          this.rolesList = this.oauthService.getUser().authorities;
+          // this.rolesList = this.oauthService.getUser().authorities;
         }
       }).catch((error) => {
         throw error;
       });
-    if (this.getIsAuthenticated()) {
-      await this.oauthService.withToken().get(`${this.iamUrl}/usuario/admin/by/nombre?nombre=${params.username}`)
-        .toPromise().then((result) => {
-          localStorage.setItem('userIAM', JSON.stringify(result));
-        });
-    }
     return this.getIsAuthenticated();
   }
 
@@ -147,10 +120,6 @@ export class LoginService {
 
   public getUser(): User {
     return this.oauthService.getUser();
-  }
-
-  public getUserIAM(): UserIAM {
-    return this.oauthService.getUserIAM();
   }
 
   public getToken(): Token {
@@ -174,12 +143,15 @@ export class LoginService {
         localStorage.setItem('ACTION_NAME', STATUS.logout);
         localStorage.removeItem('APP_STATUS');
         localStorage.removeItem('PATH_HOME');
-        localStorage.removeItem('userIAM');
         this.statusApp = 'NOT_LOGGED';
         this.zone.run(() => {
           this.router.navigate(['/login']);
         });
       }
     });
+  }
+
+  public hasRole(authority: string): boolean {
+    return this.oauthService.hasRole(authority);
   }
 }
