@@ -77,6 +77,8 @@ import {MatSelectModule} from '@angular/material/select';
 import {A11yModule} from '@angular/cdk/a11y';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
+import {MatSliderModule} from '@angular/material/slider';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 
 @NgModule({
   declarations: [
@@ -153,6 +155,8 @@ import {MatIconModule} from '@angular/material/icon';
     MatSelectModule,
     MatOptionModule,
     MatButtonModule,
+    MatSliderModule,
+    MatSlideToggleModule,
     NgxsModule.forRoot([LoginService]),
     NgxsReduxDevtoolsPluginModule.forRoot(),
     NgxsFormPluginModule.forRoot()
@@ -163,12 +167,6 @@ import {MatIconModule} from '@angular/material/icon';
     ClientService,
     OauthService,
     ConfigService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: loadConfig,
-      deps: [ConfigService],
-      multi: true
-    },
     ModalService,
     NotificationPop,
     ConfirmationDialog,
@@ -176,7 +174,13 @@ import {MatIconModule} from '@angular/material/icon';
     LoginService,
     CookieService,
     WebSocketService,
-    AuthGuard
+    AuthGuard,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: loadConfig,
+      deps: [ConfigService],
+      multi: true
+    }
   ],
   exports: [
     CurrencyPipe,

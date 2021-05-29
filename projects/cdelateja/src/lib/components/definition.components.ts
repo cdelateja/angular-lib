@@ -1,6 +1,8 @@
 import {Component, ElementRef, Input} from '@angular/core';
-import {AbstractControl, ControlContainer, ControlValueAccessor, FormControl, ValidationErrors} from '@angular/forms';
+import {ControlContainer, ControlValueAccessor, FormControl, ValidationErrors} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
+import {CustomErrorStateMatcher} from "./custom/error.state";
+import {Observable} from "rxjs";
 
 /**
  * Defines the base attributes and behavior for LS input components
@@ -35,19 +37,19 @@ export class AbstractComponent implements ControlValueAccessor {
   @Input()
   public hint: string;
 
+  public required = false;
+  public customMatcher = new CustomErrorStateMatcher();
   public controlErrors: ValidationErrors;
   public errorsKeys: string[];
   public status = 'clean';
   public validMessage = 'ValidatorMessages.valid';
   public control: FormControl;
-  public val: any;
 
-  protected labelClass = 'ct-label';
-  protected multipleErrors = false;
+  protected val: any;
   protected onChange: any = () => {
-  };
+  }
   protected onTouched: any = () => {
-  };
+  }
 
   /**
    *
@@ -68,44 +70,15 @@ export class AbstractComponent implements ControlValueAccessor {
     } else {
       this.control = new FormControl(this.value, []);
     }
+    this.required = this.control.validator !== null;
+    this.customMatcher.setControl(this.control);
   }
 
   /**
    *
-   * @param el
+   * @param controlErrors
+   * @param multiMessageErrors
    */
-  protected addLabel(el: string): void {
-  }
-
-  /**
-   *
-   */
-  public addToolTip(): void {
-  }
-
-  /**
-   *
-   * @param required
-   */
-  public setRequired(required: boolean): void {
-  }
-
-  /**
-   *
-   * @param toolTip
-   */
-  public setToolTip(toolTip: string): void {
-    this.toolTip = toolTip;
-  }
-
-  /**
-   * Sets the string value to the label
-   * @param label
-   */
-  public setLabel(label: string): void {
-    this.label = label;
-  }
-
   public setMessagesErrors(controlErrors: ValidationErrors, multiMessageErrors: boolean): void {
     this.controlErrors = controlErrors;
     if (this.controlErrors) {
@@ -122,8 +95,8 @@ export class AbstractComponent implements ControlValueAccessor {
   public validate(multiMessageErrors: boolean): void {
     const controlErrors: ValidationErrors = this.control.errors;
     if (controlErrors !== null) {
-      this.setMessagesErrors(controlErrors, multiMessageErrors);
       this.control.markAsTouched();
+      this.setMessagesErrors(controlErrors, multiMessageErrors);
     } else if (this.control.validator !== null) {
       this.setAsValid();
     } else {
@@ -135,6 +108,10 @@ export class AbstractComponent implements ControlValueAccessor {
     this.errorsKeys = [];
     this.status = 'clean';
     this.control.markAsUntouched();
+  }
+
+  public getValueChanges(): Observable<any> {
+    return this.control.valueChanges;
   }
 
   public setAsValid(): void {
@@ -156,7 +133,7 @@ export class AbstractComponent implements ControlValueAccessor {
   public set value(val: any) {
     this.val = val;
     this.onChange(val);
-    this.onTouched();
+    this.onTouched(val);
   }
 
   public registerOnChange(fn: any): void {

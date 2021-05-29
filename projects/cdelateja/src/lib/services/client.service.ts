@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable, throwError} from 'rxjs';
 import {HttpClient, HttpErrorResponse, HttpEventType, HttpHeaders} from '@angular/common/http';
-import {ClientOptions, Progress, Response} from '../dtos/definition-class';
+import {ClientOptions, Progress, Response, Token} from '../dtos/definition-class';
 import {catchError, concatMap, delay, map, retryWhen, shareReplay, take, tap} from 'rxjs/operators';
 
 @Injectable({
@@ -9,13 +9,8 @@ import {catchError, concatMap, delay, map, retryWhen, shareReplay, take, tap} fr
 })
 export class ClientService {
 
-  private NO_CONNECTION = 0;
-  private httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-  };
-  private petitionsCache: Map<string, Observable<any>> = new Map<string, Observable<any>>();
+  private token = 'token';
+  public cache: Map<string, Observable<any>> = new Map<string, Observable<any>>();
 
   constructor(private http: HttpClient) {
   }
@@ -32,97 +27,145 @@ export class ClientService {
     }
   }
 
-  /**
-   * M&eacute;todo que asigna un httpOptions
-   * @param httpOptions
-   */
-  public setHttOptions(httpOptions: any): void {
-    this.httpOptions = httpOptions;
+  public create(): RestClient {
+    return new RestClient(this.http, this);
   }
 
-  public getHttOptions(): any {
-    return this.httpOptions;
+  public getToken(): Token {
+    return JSON.parse(localStorage.getItem(this.token));
   }
 
-  public post(url: string, jsonBody: any, options?: ClientOptions): Observable<any> {
-    return this.processPetition('post', url, jsonBody, options);
+}
+
+export class RestClient {
+
+  private NO_CONNECTION = 0;
+  private httpOptions = {};
+  private type: string;
+  private url: string;
+  private contentType = 'application/json';
+  private token = '';
+  private responseType = '';
+  private jsonBody: any;
+  private options: ClientOptions;
+
+  constructor(private http: HttpClient,
+              private clientService: ClientService) {
   }
 
-  public put(url: string, jsonBody: any, options?: ClientOptions): Observable<any> {
-    return this.processPetition('put', url, jsonBody, options);
+  public static create(http: HttpClient, clientService: ClientService): RestClient {
+    return new RestClient(http, clientService);
   }
 
-  public get(url: string, options?: ClientOptions): Observable<any> {
-    return this.processPetition('get', url, null, options);
+  public post(url: string, jsonBody: any): RestClient {
+    this.type = 'post';
+    this.url = url;
+    this.jsonBody = jsonBody;
+    return this;
   }
 
-  public delete(url: string, options?: ClientOptions): Observable<any> {
-    return this.processPetition('delete', url, null, options);
+  public put(url: string, jsonBody: any): RestClient {
+    this.type = 'put';
+    this.url = url;
+    this.jsonBody = jsonBody;
+    return this;
   }
 
-  public postStream(url: string, jsonBody: any): Observable<any> {
-    this.httpOptions['responseType'] = 'blob';
-    return this.http.post(url, JSON.stringify(jsonBody), this.httpOptions).pipe(
-      catchError((error: HttpErrorResponse) => {
-        return this.validateErrorHttp(error);
-      }),
-      retryWhen((errors) => {
-        return this.retry(errors);
-      }),
-      map((data) => {
-        return data;
-      }));
+  public get(url: string): RestClient {
+    this.type = 'get';
+    this.url = url;
+    return this;
   }
 
-  upload(url: string, data: any): Observable<any> {
-    return this.http.post(url, data, {
-      reportProgress: true,
-      observe: 'events',
+  public delete(url: string, options?: ClientOptions): RestClient {
+    this.type = 'delete';
+    this.url = url;
+    return this;
+  }
+
+  public upload(url: string, data: any): RestClient {
+    this.type = 'upload';
+    this.url = url;
+    this.jsonBody = data;
+    return this;
+  }
+
+  public setOptions(options: ClientOptions): RestClient {
+    this.options = options;
+    return this;
+  }
+
+  public asResponseBlob(): RestClient {
+    this.responseType = 'blob';
+    return this;
+  }
+
+  public asPlainText(): RestClient {
+    this.contentType = 'text/plain';
+    return this;
+  }
+
+  public asFormWWW(appName: string, password: string): RestClient {
+    this.contentType = 'application/x-www-form-urlencoded';
+    this.token = 'Basic ' + btoa(`${appName}:${password}`);
+    return this;
+  }
+
+  public withToken(): RestClient {
+    this.token = `Bearer ${this.clientService.getToken().access_token}`;
+    return this;
+  }
+
+  public execute(): Observable<any> {
+    this.createHeaders();
+    return this.processPetition(this.type, this.url, this.jsonBody);
+  }
+
+  private createHeaders(): void {
+    this.httpOptions = {
       headers: new HttpHeaders({
-        Authorization: this.httpOptions.headers.get('Authorization')
-      })
-    }).pipe(map((event: any) => {
-        switch (event.type) {
-          case HttpEventType.UploadProgress:
-            const progress = Math.round(100 * event.loaded / event.total);
-            return new Progress(progress);
-
-          case HttpEventType.Response:
-            return event.body;
-          default:
-            return `Unhandled event: ${event.type}`;
-        }
-      })
-    );
+        'Content-Type': this.contentType,
+        Authorization: this.token
+      }),
+      responseType: this.responseType
+    };
   }
 
-  private processPetition(type: string, url: string, body?: any, options?: ClientOptions): Observable<any> {
+  private processPetition(type: string, url: string, body?: any): Observable<any> {
     console.log(`Url[${type}]: ${url}`);
     console.log('HttpOptions: ', this.httpOptions);
     console.log('Body: ', body);
     // console.log('Options: ', options);
-    if (options) {
-      if (options.bufferSize > 0) {
-        if (this.petitionsCache.has(url)) {
-          return this.petitionsCache.get(url);
-        } else {
-          const petition = this.getPetition(type, url, options, body);
-          this.petitionsCache.set(url, petition);
-          return petition;
-        }
+    if (this.options) {
+      if (this.options.bufferSize > 0) {
+        return this.getByCache(type, url, body);
       }
-      return this.getPetition(type, url, options, body);
+      return this.getPetition(type, url, this.options, body);
     } else {
-      const clientOptions: ClientOptions = {
-        bufferSize: 0,
-        delay: 2000,
-        take: 10
-      };
-      return this.getPetition(type, url, clientOptions, body);
+      this.options = this.getDefaultOptions();
+      return this.getPetition(type, url, this.options, body);
     }
   }
 
-  private getPetition(type: string, url: string, options: ClientOptions, body?: any) {
+  private getByCache(type: string, url: string, body?: any): Observable<any> {
+    if (this.clientService.cache.has(url)) {
+      return this.clientService.cache.get(url);
+    } else {
+      const petition = this.getPetition(type, url, this.options, body);
+      this.clientService.cache.set(url, petition);
+      return petition;
+    }
+  }
+
+  private getDefaultOptions(): ClientOptions {
+    return {
+      bufferSize: 0,
+      delay: 2000,
+      take: 10
+    };
+  }
+
+  private getPetition(type: string, url: string, options: ClientOptions, body?: any): Observable<any> {
     switch (type) {
       case 'get':
         return this.http.get(url, this.httpOptions).pipe(
@@ -152,6 +195,27 @@ export class ClientService {
             return data;
           }),
           shareReplay({bufferSize: options.bufferSize, refCount: true}));
+
+      case 'upload':
+        return this.http.post(url, body, {
+          reportProgress: true,
+          observe: 'events',
+          headers: new HttpHeaders({
+            Authorization: this.token
+          })
+        }).pipe(map((event: any) => {
+            switch (event.type) {
+              case HttpEventType.UploadProgress:
+                const progress = Math.round(100 * event.loaded / event.total);
+                return new Progress(progress);
+
+              case HttpEventType.Response:
+                return event.body;
+              default:
+                return `Unhandled event: ${event.type}`;
+            }
+          })
+        );
 
       case 'put':
         return this.http.put(url, body, this.httpOptions).pipe(

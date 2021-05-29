@@ -1,9 +1,7 @@
-<ct-textfield #search
-              (keyup)="searchByName(search.value)"></ct-textfield>
 <ct-check-box
   [label]="'Prueba mensajes de uno en uno'"
-  #multiple
-  (click)="changeMultiple(multiple.control.value)"></ct-check-box>
+  [(ngModel)]="singleMessages"
+  (click)="changeMultiple()"></ct-check-box>
 <form [formGroup]="formGroup" [attr.id]="formId">
   <div class="form-row">
     <div class="col-md-12">
@@ -52,10 +50,11 @@
                     [formControlName]="'terms'"></ct-check-box>
     </div>
   </div>
-  <ct-button [type]="buttonType.PRIMARY" (click)="submit()">
+  <ct-button [type]="ButtonType.PRIMARY" (click)="submit()">
     Guardar
   </ct-button>
   <button type="button" class="btn btn-secondary" (click)="clean()">
     Limpiar
   </button>
 </form>
+

@@ -273,7 +273,8 @@ $blue: #1e90ff;
   min-width: 350px;
   background-color: white;
   z-index: 9;
-  &.form-popup-show{
+
+  &.form-popup-show {
     display: block;
   }
 }
@@ -285,7 +286,8 @@ $blue: #1e90ff;
   min-width: 350px;
   background-color: white;
   z-index: 9;
-  &.date-popup-show{
+
+  &.date-popup-show {
     visibility: visible;
   }
 
@@ -298,6 +300,7 @@ $blue: #1e90ff;
     width: 26px;
     text-align: center;
     cursor: pointer;
+
     &.date-selected {
       border-color: #007bff;
       background: #007bff;
@@ -353,18 +356,6 @@ $blue: #1e90ff;
 
 .login p {
   padding: 12px;
-}
-
-.login input {
-  box-sizing: border-box;
-  display: block;
-  width: 100%;
-  border-width: 1px;
-  border-style: solid;
-  padding: 10px;
-  outline: 0;
-  font-size: 1.0em;
-  border-radius: 5px;
 }
 
 .modal-xxlg {

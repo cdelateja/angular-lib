@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Response, Token, User, ValidateReq} from '../dtos/definition-class';
-import {HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
+import {HttpErrorResponse, HttpHeaders} from '@angular/common/http';
 import {catchError, map} from 'rxjs/operators';
 import {ClientService} from './client.service';
 import {timer} from 'rxjs';
@@ -22,18 +22,9 @@ export class OauthService {
   private isAuthenticated = false;
   private timeDifference = 60;
 
-  private httpOptions = {
-    headers: new HttpHeaders({
-      'Content-Type': 'application/x-www-form-urlencoded'
-    })
-  };
-  private readonly clientOptions: any;
-
-  constructor(private http: HttpClient,
-              private configService: ConfigService,
+  constructor(private configService: ConfigService,
               private clientService: ClientService,
               private cookieService: CookieService) {
-    this.clientOptions = this.clientService.getHttOptions();
   }
 
   public setProperties(appName: string, password: string): void {
@@ -60,11 +51,6 @@ export class OauthService {
     return JSON.parse(localStorage.getItem(this.authenticated));
   }
 
-  public withToken(): ClientService {
-    this.clientService.setHttOptions(this.getHeaders());
-    return this.clientService;
-  }
-
   public logout(): Promise<boolean> {
     if (!this.checkIfCookieExists()) {
       return Promise.resolve(true);
@@ -83,20 +69,27 @@ export class OauthService {
     authForm.set('grant_type', 'password');
     authForm.set('username', userName);
     authForm.set('password', password);
-    await this.post(this.getUriOauth() + '/oauth/token', authForm).then((result) => {
-      if (result) {
-        localStorage.setItem(this.token, JSON.stringify(result));
-        this.isAuthenticated = true;
-        this.timerRefreshToken();
-      } else {
-        return this.isAuthenticated = false;
-      }
-    }).then((res: boolean) => {
-      return res;
-    }).catch((err) => {
-      console.warn(`Error authenticating user`);
-      return false;
-    });
+    await this.clientService
+      .create()
+      .post(this.getUriOauth() + '/oauth/token', authForm.toString())
+      .asFormWWW(this.appName, this.password)
+      .execute()
+      .toPromise()
+      .then((result) => {
+        console.log('result');
+        if (result) {
+          localStorage.setItem(this.token, JSON.stringify(result));
+          this.isAuthenticated = true;
+          this.timerRefreshToken();
+        } else {
+          return this.isAuthenticated = false;
+        }
+      }).then((res: boolean) => {
+        return res;
+      }).catch((err) => {
+        console.warn(`Error authenticating user`);
+        return false;
+      });
     if (this.isAuthenticated) {
       await this.findUser();
     }
@@ -105,7 +98,12 @@ export class OauthService {
   }
 
   private async findUser(): Promise<void> {
-    await this.withToken().get(this.getUriOauth() + '/user/find').toPromise()
+    await this.clientService
+      .create()
+      .withToken()
+      .get(this.getUriOauth() + '/user/find')
+      .execute()
+      .toPromise()
       .then((result: Response) => {
         if (ClientService.validateData(result)) {
           const user: User = result.result;
@@ -130,14 +128,6 @@ export class OauthService {
   }
 
   public refreshToken(): void {
-    const authForm2: URLSearchParams = new URLSearchParams();
-    authForm2.set('grant_type', 'refresh_token');
-    authForm2.set('refresh_token', this.getToken().refresh_token);
-    this.post(this.getUriOauth() + '/oauth/token', authForm2).then((result) => {
-      localStorage.setItem(this.token, JSON.stringify(result));
-      this.isAuthenticated = true;
-      this.timerRefreshToken();
-    });
   }
 
   private timerRefreshToken(): void {
@@ -145,15 +135,6 @@ export class OauthService {
     numbers.subscribe((x) => {
       this.refreshToken();
     });
-  }
-
-  private post(url: string, authForm: URLSearchParams): Promise<any> {
-    const httpOptions: any = Object.assign({}, this.httpOptions);
-    httpOptions.headers = httpOptions.headers.append('Authorization', this.getBasic());
-    return this.http.post(url, authForm.toString(), httpOptions).pipe(
-      map((data) => {
-        return data;
-      })).toPromise();
   }
 
   public checkIfCookieExists(): boolean {
@@ -165,21 +146,24 @@ export class OauthService {
     if (this.checkIfCookieExists()) {
       const validateRe: ValidateReq = new ValidateReq();
       validateRe.key = this.cookieService.get(this.cookieName);
-      await this.clientService.post(
-        `${this.getUriOauth()}/user/login`, validateRe).pipe(
-        map((response: Response) => {
-          if (ClientService.validateData(response)) {
-            token = response.result;
-            localStorage.setItem(this.token, JSON.stringify(token));
-            return token;
-          }
-          return null;
-        }),
-        catchError((error: HttpErrorResponse) => {
-          console.log('Error: ' + error.message);
-          return '';
-        })
-      ).toPromise();
+      await this.clientService
+        .create()
+        .post(`${this.getUriOauth()}/user/login`, validateRe)
+        .execute()
+        .pipe(
+          map((response: Response) => {
+            if (ClientService.validateData(response)) {
+              token = response.result;
+              localStorage.setItem(this.token, JSON.stringify(token));
+              return token;
+            }
+            return null;
+          }),
+          catchError((error: HttpErrorResponse) => {
+            console.log('Error: ' + error.message);
+            return '';
+          })
+        ).toPromise();
     }
     return new Promise((resolve) => {
       resolve(token);
@@ -191,13 +175,17 @@ export class OauthService {
   }
 
   public ssoLogout(): Promise<any> {
-    this.clientService.setHttOptions(this.getHeaderStoreCookie());
-    return this.withToken().get(`${this.getUriOauth()}/user/logout`).pipe(
-      map((response) => {
-        console.log('Respuesta de store cookie', response);
-        return response;
-      })
-    ).toPromise();
+    return this.clientService
+      .create()
+      .withToken()
+      .get(`${this.getUriOauth()}/user/logout`)
+      .execute()
+      .pipe(
+        map((response) => {
+          console.log('Respuesta de store cookie', response);
+          return response;
+        })
+      ).toPromise();
   }
 
   private getHeaderStoreCookie(): any {
@@ -208,15 +196,6 @@ export class OauthService {
         Authorization: `Bearer ${this.getToken().access_token}`
       }),
       responseType: 'text'
-    };
-  }
-
-  private getHeaders(): any {
-    return {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${this.getToken().access_token}`
-      })
     };
   }
 

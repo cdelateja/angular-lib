@@ -16,9 +16,6 @@ export class HelloComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.clien.get('http://5.189.172.240:8888/participanteui/devCloud').subscribe(result => {
-
-    });
   }
 
   goBack() {

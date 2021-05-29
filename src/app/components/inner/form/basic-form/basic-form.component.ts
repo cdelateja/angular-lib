@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {AbstractValidator, FormValidator, NotEmpty, NotNull, OauthService, Size} from 'cdelateja';
+import {AbstractValidator, FormValidator, NotEmpty, NotNull, OauthService, Size, NotFalse, NotZero} from 'cdelateja';
 import {BasicForm, Pais} from '../../../../dtos/class.definition';
 import {TranslateService} from '@ngx-translate/core';
-import {NotFalse, NotZero} from '../../../../../../projects/cdelateja/src/lib/directives/directives.validator';
 
 @Component({
   selector: 'app-basic-form',
@@ -30,7 +29,7 @@ export class BasicFormComponent extends AbstractValidator implements OnInit {
     super(translate);
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     // this.getFieldObservable('name').subscribe(value => {
     //   let errors: Error[] = [];
     //   if (value !== '') {
@@ -41,33 +40,26 @@ export class BasicFormComponent extends AbstractValidator implements OnInit {
     //   }
     // });
     // this.addValidators([NotEmpty.generate(['name'])]);
-    this.disableField('password');
-    this.enabledField('password');
-    this.reset(new BasicForm());
+    // this.reset(new BasicForm());
   }
 
-  submit() {
+  public submit(): void {
     console.log(this.formGroup.getRawValue());
     console.log(this.validateForm());
   }
 
-  clean() {
+  public clean(): void {
     this.reset(new BasicForm());
   }
 
-  changeMultiple(multiple: any) {
-    console.log(multiple);
+  public changeMultiple(): void {
     this.cleanMessages();
-    if (this.singleMessages) {
+    if (!this.singleMessages) {
       this.setAsSingleMessageError();
     } else {
       this.setAsMultipleMessageError();
     }
     this.validateForm();
-  }
-
-  searchByName(word: string) {
-    console.log(word);
   }
 
 

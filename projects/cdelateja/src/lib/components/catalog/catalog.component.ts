@@ -34,10 +34,6 @@ export class CatalogComponent extends AbstractComponent implements OnInit {
     super.init();
   }
 
-  protected addLabel(el: string): void {
-    super.addLabel('select');
-  }
-
   public writeValue(value: any): void {
     this.values = [];
     if (value) {

@@ -8,8 +8,8 @@ export class BasicForm {
   public birthday: string = '';
   public comments: string = '';
   public terms: boolean = null;
-  public country: any = new Pais(1, 'Mexico');
-  public gender: any = {id: 1, nombre: 'Masculino'};
+  public country: any = null;
+  public gender: any = null;
   public hobbies: any = null;
   public myOther: any = null;
 }

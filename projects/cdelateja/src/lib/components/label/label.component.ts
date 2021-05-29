@@ -27,8 +27,4 @@ export class LabelComponent extends AbstractComponent implements OnInit {
     super.init();
   }
 
-  protected addLabel(el: string): void {
-    super.addLabel('p');
-  }
-
 }

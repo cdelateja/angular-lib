@@ -11,7 +11,7 @@ export class NavbarItemComponent implements OnInit {
   public label: string;
 
   @Input()
-  public routerLink: string;
+  public routerLink: any;
 
   @Input()
   public icon: any;

@@ -28,4 +28,11 @@ export class CheckBoxComponent extends AbstractComponent implements OnInit {
     super.init();
   }
 
+  public writeValue(value: any): void {
+    super.writeValue(value);
+    if (value == null) {
+      super.writeValue(false);
+    }
+  }
+
 }

@@ -1,9 +1,11 @@
 <div class="form-group">
-  <mat-form-field appearance="fill">
+  <mat-form-field appearance="fill" [class.mat-form-field-invalid]="status === 'invalid'">
     <mat-label>{{label | translate}}</mat-label>
     <input matInput
+           [required]="required"
+           [errorStateMatcher]="customMatcher"
            [matDatepicker]="picker"
-           [formControl]="control"
+           [(ngModel)]="value"
            [attr.name]="formControlName"
            [attr.disabled]="disabled"
            placeholder="{{placeHolder | translate}}">

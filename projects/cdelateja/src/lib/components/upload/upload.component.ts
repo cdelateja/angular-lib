@@ -26,12 +26,8 @@ export class UploadComponent extends AbstractComponent implements OnInit {
     super(elRef, translate, controlContainer);
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     super.init();
-  }
-
-  protected addLabel(el: string) {
-
   }
 
   public writeValue(value: any): void {
@@ -51,16 +47,6 @@ export class UploadComponent extends AbstractComponent implements OnInit {
   public upload(): void {
     const formData = new FormData();
     formData.append('file', this.file);
-
-    this.http.upload('', formData).subscribe(
-      (res: any) => {
-        if (res instanceof Progress) {
-          this.progress = res.progress;
-        }
-        this.uploadResponse = res;
-      },
-      (err) => this.error = err
-    );
   }
 
 }

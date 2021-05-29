@@ -65,7 +65,7 @@ export class ConfigService {
         return res;
       })
       .catch((err) => {
-        console.error(`Error getting properties ${err}`);
+        console.error(`Error getting properties`, err);
         return null;
       });
   }

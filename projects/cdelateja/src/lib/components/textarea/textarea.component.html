@@ -1,10 +1,12 @@
 <div class="form-group">
-  <mat-form-field>
+  <mat-form-field [class.mat-form-field-invalid]="status === 'invalid'">
     <mat-label>
       {{label | translate}}
     </mat-label>
     <textarea matInput
-              [formControl]="control"
+              [required]="required"
+              [errorStateMatcher]="customMatcher"
+              [(ngModel)]="value"
               [attr.name]="formControlName"
               [attr.disabled]="disabled"
               placeholder="{{placeHolder | translate}}"></textarea>

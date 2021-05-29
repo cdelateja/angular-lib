@@ -1,6 +1,4 @@
-import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {MultiTranslateHttpLoader} from 'ngx-translate-multi-http-loader';
@@ -10,7 +8,6 @@ import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {CTModule} from 'cdelateja';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {HomeComponent} from './components/routes/home/home.component';
-import {ObservableService} from './services/observable.service';
 import {ChartsModule} from 'ng2-charts';
 import {BasicFormComponent} from './components/inner/form/basic-form/basic-form.component';
 import {DynamicFormComponent} from './components/inner/form/dynamic-form/dynamic-form.component';
@@ -68,7 +65,7 @@ import {MatButtonModule} from '@angular/material/button';
       }
     })
   ],
-  providers: [ObservableService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {

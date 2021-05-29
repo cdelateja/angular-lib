@@ -1,12 +1,12 @@
 {
   "servers": {
     "oauth": {
-      "url": "http://192.168.0.19:8002",
+      "url": "http://localhost:8002",
       "getToken": "/oauth/token",
       "refreshToken": "/oauth/token"
     },
     "comapasWs": {
-      "url": "http://192.168.0.19:8003"
+      "url": "http://localhost:8003"
     }
   }
 }

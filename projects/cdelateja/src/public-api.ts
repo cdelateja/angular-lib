@@ -66,3 +66,4 @@ export * from './lib/services/web-socket.service';
 export * from './lib/services/app-auth-guard.guard';
 
 export * from './lib/utils/util';
+export * from './lib/utils/functions';

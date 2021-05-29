@@ -1,14 +1,13 @@
-<label class="form-group switch">
-  <input type="checkbox"
-         [ngClass]="{'is-invalid': status === 'invalid', 'is-valid': status === 'valid' }"
-         [attr.name]="formControlName"
-         [attr.disabled]="disabled ? '' : null"
-         [(ngModel)]="value">
-  <div class="slider"></div>
-  <div class="message-error invalid-feedback" *ngFor="let error of errorsKeys">
+<label class="form-group">
+  <mat-slide-toggle [(ngModel)]="value"
+                    [attr.name]="formControlName"
+                    [attr.disabled]="disabled">
+    {{label | translate}}
+  </mat-slide-toggle>
+  <mat-hint *ngIf="status !== 'invalid'">
+    {{hint | translate}}
+  </mat-hint>
+  <mat-error *ngFor="let error of errorsKeys">
     {{controlErrors[error].message | translate : controlErrors[error]}}
-  </div>
-  <div class="valid-feedback" *ngIf="status === 'valid'">
-    {{validMessage | translate}}
-  </div>
+  </mat-error>
 </label>

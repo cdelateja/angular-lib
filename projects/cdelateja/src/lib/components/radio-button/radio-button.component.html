@@ -2,10 +2,13 @@
     <mat-label>
       {{label | translate}}
     </mat-label>
-    <mat-radio-group [formControl]="control"
+    <mat-radio-group [(ngModel)]="value"
                      [attr.name]="formControlName"
                      [attr.disabled]="disabled">
-      <mat-radio-button *ngFor="let item of values" [value]="item" [checked]="compareObjects(item)">
+      <mat-radio-button *ngFor="let item of values"
+                        [value]="item"
+                        class="role-radio-button {{compareObjects(item) ? 'mat-radio-checked' : ''}}"
+                        [checked]="compareObjects(item)">
         {{itemCaption !== undefined ? item[itemCaption] : item}}
       </mat-radio-button>
     </mat-radio-group>

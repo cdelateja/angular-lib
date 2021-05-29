@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {ClientService} from "cdelateja";
-import {Router} from "@angular/router";
+import {ClientService} from 'cdelateja';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-petitions',
@@ -19,24 +19,10 @@ export class PetitionsComponent implements OnInit {
               private router: Router) {
   }
 
-  ngOnInit() {
-    this.client.get('http://5.189.172.240:8888/participanteui/default', {bufferSize: 1}).subscribe(result => {
-      this.responseGet = result;
-    });
-    this.client.get('http://5.189.172.240:8888/participanteui/default', {bufferSize: 1}).subscribe(result => {
-      this.cacheGet = result;
-    });
-    this.client.get('http://5.189.172.5:8888/participanteui/devCloud', {bufferSize: 1, take: 1}).subscribe(result => {
-    }, error => {
-      this.errorRetry = error;
-    });
-    this.client.post('http://5.189.172.240:8888/participanteui/devCloud', {bufferSize: 1, take: 1}).subscribe(result => {
-      this.errorGet = result;
-    });
-
+  public ngOnInit(): void {
   }
 
-  toOtherPage() {
+  public toOtherPage(): void {
     this.router.navigate(['/hello']);
   }
 }

@@ -53,23 +53,6 @@ export class SelectTwinComponent extends AbstractComponent implements OnInit {
     this.toLocalValues();
   }
 
-  protected addLabel(el: string): void {
-    if (this.label) {
-      const input = this.element.querySelector('.first-twin');
-      if (input !== null) {
-        const form = this.element.querySelector('.parent');
-        const label = document.createElement('label');
-        label.className = this.labelClass;
-        this.translate.get(this.label).subscribe((e) => {
-          label.innerHTML = e;
-          form.insertBefore(label, input);
-          this.setRequired(this.control && this.control.validator !== null);
-          this.addToolTip();
-        });
-      }
-    }
-  }
-
   private toLocalValues(): void {
     this.localValues = [];
     this.values.forEach((e) => this.localValues.push(e));

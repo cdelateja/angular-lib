@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {OauthService} from './oauth.service';
 import {ConfigService} from './config.service';
 import {PreferenciaGridRequest} from '../dtos/definition-class';
+import {ClientService} from "./client.service";
 
 @Injectable({
   providedIn: 'root'
@@ -11,19 +11,31 @@ export class PreferencesService {
 
   private readonly URL = '';
 
-  constructor(private oauthService: OauthService, private configService: ConfigService) {
+  constructor(private clientService: ClientService, private configService: ConfigService) {
     this.URL = this.configService.get('lsServers.zuul.iamserverrepo');
   }
 
   public getPreferences(user: string, gridName: string): Observable<any> {
-    return this.oauthService.withToken().get(`${this.URL}/preferencia/grid/by/nombre?usuario=${user}&gridName=${gridName}`);
+    return this.clientService
+      .create()
+      .withToken()
+      .get(`${this.URL}/preferencia/grid/by/nombre?usuario=${user}&gridName=${gridName}`)
+      .execute();
   }
 
   public save(request: PreferenciaGridRequest): Observable<any> {
-    return this.oauthService.withToken().post(`${this.URL}/preferencia/grid/add`, request);
+    return this.clientService
+      .create()
+      .withToken()
+      .post(`${this.URL}/preferencia/grid/add`, request)
+      .execute();
   }
 
   public delete(request: PreferenciaGridRequest): Observable<any> {
-    return this.oauthService.withToken().post(`${this.URL}/preferencia/delete/by/nombre`, request);
+    return this.clientService
+      .create()
+      .withToken()
+      .post(`${this.URL}/preferencia/delete/by/nombre`, request)
+      .execute();
   }
 }

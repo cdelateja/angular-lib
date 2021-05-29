@@ -5,6 +5,7 @@ import * as SockJS from 'sockjs-client';
 import {Observable, Subject} from 'rxjs';
 import {IdRequest} from '../dtos/definition-class';
 import {OauthService} from './oauth.service';
+import {ClientService} from "./client.service";
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +18,9 @@ export class WebSocketService {
   private stompClient: any;
   private notificationPanel = new Subject<string>();
 
-  constructor(private configService: ConfigService, private oauthService: OauthService) {
+  constructor(private configService: ConfigService,
+              private clientService: ClientService,
+              private oauthService: OauthService) {
     this.URL = this.configService.get('lsServers.zuul.lswsnotifications');
     this.webSocketEndPoint = this.configService.get('lsServers.zuul.webSocketNotification') + '?user=';
   }
@@ -37,7 +40,7 @@ export class WebSocketService {
     }
   }
 
-  disconnect() {
+  public disconnect(): void {
     if (this.stompClient) {
       this.stompClient.disconnect();
     }
@@ -45,14 +48,14 @@ export class WebSocketService {
   }
 
   // on error, schedule a reconnection attempt
-  private errorCallBack(error) {
+  private errorCallBack(error): void {
     console.log('errorCallBack -> ' + error);
     setTimeout(() => {
       this.connect();
     }, 5000);
   }
 
-  private onMessageReceived(message) {
+  private onMessageReceived(message): void {
     this.notificationPanel.next(message.body);
   }
 
@@ -61,10 +64,18 @@ export class WebSocketService {
   }
 
   public getNotificationsByUser(request: IdRequest): Observable<any> {
-    return this.oauthService.withToken().post(this.URL + '/obtenerNoLeidos', request);
+    return this.clientService
+      .create()
+      .withToken()
+      .post(this.URL + '/obtenerNoLeidos', request)
+      .execute();
   }
 
   public markAsRead(request: IdRequest): Observable<any> {
-    return this.oauthService.withToken().post(this.URL + '/marcarLeido', request);
+    return this.clientService
+      .create()
+      .withToken()
+      .post(this.URL + '/marcarLeido', request)
+      .execute();
   }
 }

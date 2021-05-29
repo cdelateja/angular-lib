@@ -1,4 +1,4 @@
-import {AbstractControl, FormGroup, ValidationErrors, ValidatorFn} from '@angular/forms';
+import {AbstractControl, FormGroup, FormGroupDirective, ValidationErrors, ValidatorFn} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
 import {
   createDynamicFormValidator,
@@ -9,7 +9,7 @@ import {
 } from '../directives/directives.validator';
 import {ButtonType} from '../components/button/button.component';
 import {AlertType} from '../components/alert/alert.component';
-import {AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {FieldConfig} from '../dtos/definition-class';
 import {AbstractComponent} from '../components/definition.components';
 import {Observable, Subject, Subscription} from 'rxjs';
@@ -30,10 +30,13 @@ export class AbstractValidator implements OnInit, OnDestroy, AfterViewInit {
   @ViewChildren(AbstractComponent)
   protected fieldsComponents: QueryList<AbstractComponent>;
 
+  @ViewChild(FormGroupDirective)
+  public myForm;
+
   public formGroup: FormGroup;
   public formId: string;
   public formContainer;
-  public buttonType: ButtonType = new ButtonType();
+  public readonly ButtonType = new ButtonType();
   public alertType: AlertType = new AlertType();
   public object?: any;
 
@@ -104,8 +107,7 @@ export class AbstractValidator implements OnInit, OnDestroy, AfterViewInit {
    */
   public validateForm(): boolean {
     this.fieldsMap.forEach((abstractField: AbstractComponent, key: string) => {
-      const abstractControl = this.formGroup.controls[key];
-      this.validateField(abstractControl, abstractField);
+      abstractField.validate(this.multipleErrorsMessages);
     });
     return this.formGroup.valid;
   }
@@ -124,15 +126,6 @@ export class AbstractValidator implements OnInit, OnDestroy, AfterViewInit {
    */
   private getMessage(error: any): string {
     return this.translate.instant(error.message, error);
-  }
-
-  /**
-   * Validate a specific field
-   * @param control
-   * @param abstractField
-   */
-  public validateField(control: AbstractControl, abstractField: AbstractComponent): void {
-    abstractField.validate(this.multipleErrorsMessages);
   }
 
   /**
@@ -173,11 +166,9 @@ export class AbstractValidator implements OnInit, OnDestroy, AfterViewInit {
    */
   private validateChanges(): void {
     this.fieldsMap.forEach((abstractField: AbstractComponent, key: string) => {
-      const abstractControl = this.formGroup.controls[key];
-      abstractControl.valueChanges.subscribe(() => {
-          this.validateField(abstractControl, abstractField);
-        }
-      );
+      abstractField.getValueChanges().subscribe(() => {
+        abstractField.validate(this.multipleErrorsMessages);
+      });
     });
   }
 
@@ -201,7 +192,7 @@ export class AbstractValidator implements OnInit, OnDestroy, AfterViewInit {
         const control: AbstractControl = this.formGroup.controls[e.field];
         const abstractField = this.fieldsMap.get(e.field);
         control.setErrors(e.error);
-        this.validateField(control, abstractField);
+        abstractField.validate(this.multipleErrorsMessages);
       });
     });
   }
@@ -214,7 +205,7 @@ export class AbstractValidator implements OnInit, OnDestroy, AfterViewInit {
     const control = this.formGroup.controls[field];
     const abstractField = this.fieldsMap.get(field);
     control.setErrors(null);
-    this.validateField(control, abstractField);
+    abstractField.validate(this.multipleErrorsMessages);
   }
 
   /**
@@ -222,6 +213,7 @@ export class AbstractValidator implements OnInit, OnDestroy, AfterViewInit {
    * @param value
    */
   public reset(value?: any): void {
+    this.myForm.resetForm();
     if (value) {
       this.formGroup.reset(value);
     } else {

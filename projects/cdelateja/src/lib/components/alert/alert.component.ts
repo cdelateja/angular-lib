@@ -9,13 +9,10 @@ export class AlertComponent implements OnInit {
   @Input()
   public type: string = new AlertType().DEFAULT;
 
-  @Input()
-  public label: string;
-
   constructor() {
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
   }
 
 }
