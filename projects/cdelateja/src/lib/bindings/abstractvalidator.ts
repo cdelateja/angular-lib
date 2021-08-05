@@ -7,12 +7,12 @@ import {
   generateValidators,
   Validator
 } from '../directives/directives.validator';
-import {ButtonType} from '../components/button/button.component';
 import {AlertType} from '../components/alert/alert.component';
-import {AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {Component, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import {FieldConfig} from '../dtos/definition-class';
 import {AbstractComponent} from '../components/definition.components';
-import {Observable, Subject, Subscription} from 'rxjs';
+import {Observable, Subject} from 'rxjs';
+import {BaseComponent} from '../common/base.component';
 
 /**
  *
@@ -25,7 +25,7 @@ import {Observable, Subject, Subscription} from 'rxjs';
     </span>
   `
 })
-export class AbstractValidator implements OnInit, OnDestroy, AfterViewInit {
+export class AbstractValidator extends BaseComponent {
 
   @ViewChildren(AbstractComponent)
   protected fieldsComponents: QueryList<AbstractComponent>;
@@ -36,7 +36,6 @@ export class AbstractValidator implements OnInit, OnDestroy, AfterViewInit {
   public formGroup: FormGroup;
   public formId: string;
   public formContainer;
-  public readonly ButtonType = new ButtonType();
   public alertType: AlertType = new AlertType();
   public object?: any;
 
@@ -44,23 +43,25 @@ export class AbstractValidator implements OnInit, OnDestroy, AfterViewInit {
   protected formBinder: FormBinder;
   protected fieldsMap = new Map<string, AbstractComponent>();
   protected multipleErrorsMessages = true;
-  protected subscriptions: Subscription[] = [];
 
   /**
    *
    */
   constructor(protected translate: TranslateService) {
+    super();
     this.initFormBinder();
   }
 
   public ngOnInit(): void {
+    super.ngOnInit();
   }
 
   public ngOnDestroy(): void {
-    this.subscriptions.forEach((s: Subscription) => s.unsubscribe());
+    super.ngOnDestroy();
   }
 
   public ngAfterViewInit(): void {
+    super.ngAfterViewInit();
     this.init();
   }
 
@@ -139,6 +140,13 @@ export class AbstractValidator implements OnInit, OnDestroy, AfterViewInit {
     return null;
   }
 
+  /**
+   *
+   */
+  public getValue(): any {
+    return this.formGroup.getRawValue();
+  }
+
   public getFormObservable(): Observable<any> {
     return this.formGroup.valueChanges;
   }
@@ -166,9 +174,11 @@ export class AbstractValidator implements OnInit, OnDestroy, AfterViewInit {
    */
   private validateChanges(): void {
     this.fieldsMap.forEach((abstractField: AbstractComponent, key: string) => {
-      abstractField.getValueChanges().subscribe(() => {
-        abstractField.validate(this.multipleErrorsMessages);
-      });
+      this.pushSubscription(
+        abstractField.getValueChanges().subscribe(() => {
+          abstractField.validate(this.multipleErrorsMessages);
+        })
+      );
     });
   }
 
@@ -187,14 +197,16 @@ export class AbstractValidator implements OnInit, OnDestroy, AfterViewInit {
    * Generate an observable for errors
    */
   private subscribeErrors(): void {
-    this.errorsObserver.asObservable().subscribe((errors: Error[]) => {
-      errors.forEach((e) => {
-        const control: AbstractControl = this.formGroup.controls[e.field];
-        const abstractField = this.fieldsMap.get(e.field);
-        control.setErrors(e.error);
-        abstractField.validate(this.multipleErrorsMessages);
-      });
-    });
+    this.pushSubscription(
+      this.errorsObserver.asObservable().subscribe((errors: Error[]) => {
+        errors.forEach((e) => {
+          const control: AbstractControl = this.formGroup.controls[e.field];
+          const abstractField = this.fieldsMap.get(e.field);
+          control.setErrors(e.error);
+          abstractField.validate(this.multipleErrorsMessages);
+        });
+      })
+    );
   }
 
   /**

@@ -79,6 +79,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSliderModule} from '@angular/material/slider';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import {BaseComponent} from './common/base.component';
 
 @NgModule({
   declarations: [
@@ -128,7 +129,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     NavbarBodyComponent,
     AuthorizedDirective,
     NumberFieldComponent,
-    CatalogComponent
+    CatalogComponent,
+    BaseComponent
   ],
   entryComponents: [
     DynamicTextFieldComponent,
@@ -221,7 +223,8 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
     NavbarDropdownComponent,
     NavbarBodyComponent,
     NumberFieldComponent,
-    CatalogComponent
+    CatalogComponent,
+    BaseComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })

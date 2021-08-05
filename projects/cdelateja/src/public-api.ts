@@ -40,6 +40,8 @@ export * from './lib/components/navbar/navbar-body/navbar-body.component';
 export * from './lib/components/number-field/number-field.component';
 export * from './lib/components/catalog/catalog.component';
 
+export * from './lib/common/base.component';
+
 export * from './lib/directives/currency/currency.pipe';
 export * from './lib/directives/currency/currencydirective.directive';
 export * from './lib/directives/mask/phone.pipe';
